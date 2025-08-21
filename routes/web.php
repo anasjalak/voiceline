@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+ 
+use App\Http\Controllers\StudentController;
+
+Route::get('/', [StudentController::class, 'searchForm'])->name('students.search.form');
+Route::get('/students/results', [StudentController::class, 'search'])->name('students.search');
+
