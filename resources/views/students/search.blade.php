@@ -12,7 +12,7 @@
 
         <div class="mb-3">
             <label for="surname" class="form-label">Ticket Number</label>
-            <input type="text" id="surname" name="surname" class="form-control" placeholder="e.g. X7Q-QPW-M7ZY">
+            <input type="text" id="ticket_number" name="ticket_number" class="form-control" placeholder="e.g. X7Q-QPW-M7ZY">
         </div>
 
         <div class="mb-3">

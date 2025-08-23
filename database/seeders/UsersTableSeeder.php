@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class UsersTableSeeder extends Seeder
 {
@@ -18,13 +19,16 @@ class UsersTableSeeder extends Seeder
                 'name' => 'Admin User',
                 'email' => 'admin@voiceline.com',
                 'password' => Hash::make('password'), // secure password
+                'role' => User::ROLE_ADMIN,
                 'created_at' => now(),
                 'updated_at' => now(),
+                
             ],
             [
                 'name' => 'supervisor',
                 'email' => 'supervisor@voiceline.com',
                 'password' => Hash::make('password'),
+                 'role' => User::ROLE_SUPERVISOR,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -32,6 +36,7 @@ class UsersTableSeeder extends Seeder
                 'name' => 'Support Agent',
                 'email' => 'agent@voiceline.com',
                 'password' => Hash::make('password'),
+                 'role' => User::ROLE_USER,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

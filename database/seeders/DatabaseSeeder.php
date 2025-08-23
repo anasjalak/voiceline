@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         StaffTableSeeder::class,
         ParentsTableSeeder::class,
         TicketsTableSeeder::class,
+        
     ]);
 }
 }
