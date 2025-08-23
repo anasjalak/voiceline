@@ -1,0 +1,605 @@
+
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+body[lang="ar"] {
+  direction: rtl;
+  text-align: right;
+}
+
+
+body[lang="ar"] .left-form {
+left: 0;
+direction: ltr;
+  }
+
+body[lang="ar"] .form-check-input {
+  float: right;
+  margin-left: 8px;
+}
+
+body[lang="ar"] .radio-item {
+  direction: rtl;
+  text-align: right;
+}
+
+body[lang="ar"].text-overlay {
+  direction: rtl;
+}
+
+body[lang="ar"] .radio-label {
+  padding-right: 30px;
+  padding-left: unset;
+}
+
+body[lang="ar"] .radio-circle {
+  right: 0;
+  left: unset;
+}
+
+body[lang="en"] .radio-item {
+  direction: ltr;
+  text-align: left;
+}
+
+
+body[lang="en"] .radio-dropdown i {
+  margin-right: 10px;
+}
+
+body[lang="en"] .radio-dropdown .dropdown-menu {
+  right: 0;
+  left: auto;
+}
+
+body[lang="en"] .radio-label {
+  padding-left: 30px;
+  padding-right: unset;
+}
+
+body[lang="en"] .radio-circle {
+  left: 0;
+  right: unset;
+}
+
+body {
+  display: flex;
+  height: 100vh;          
+  overflow: hidden;
+  font-family: 'DM Sans', sans-serif;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+
+/* ------------------------------------shapes css----------------------------------------- */
+
+.logo {
+  top: 1vh;
+  position: fixed;
+  width: 7vw;
+  height: auto;
+  left: 2vw;
+}
+
+.top-right {
+  position: fixed;
+  width: 20vw;
+  height: auto;
+  top: 0;
+  right: -.1vw;
+}
+
+.bottom-left {
+  height: 65vh;
+  position: fixed;
+  width: 40vw;
+  bottom: -1.2vh;
+  left: -10vw
+}
+
+
+/* ------------------------------------cards css----------------------------------------- */
+
+.card-container {
+  perspective: 1000px;
+  width: 100%;
+  border: none;
+  height: 80vh;
+  border-radius: 8px;
+}
+
+.card {
+  width: 100%;
+  height: 65vh;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease-in-out;
+  justify-content: center;
+  border: none;
+}
+
+.front, .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border: none;
+  border-radius: 8px;
+
+}
+
+.back {
+  transform: rotateY(180deg);
+}
+
+.card.flip-parent {
+  transform: rotateY(180deg);
+}
+
+.card.flip-student {
+  transform: rotateY(-180deg);
+  justify-content: center;
+}
+
+
+.card.flip-hospital {
+  transform: rotateY(180deg);
+}
+
+.card.flip-agent {
+  transform: rotateY(-180deg);
+  justify-content: center;
+}
+
+
+/* ------------------------------------localization radio css----------------------------------------- */
+.radio-dropdown {
+  position: relative;
+  
+  cursor: pointer;
+display: flex;
+flex-direction: row;
+align-self: end;
+justify-self: end;
+justify-content: end;
+ 
+}
+
+.radio-dropdown i {
+  font-size: 1.5rem;
+  margin-left: 10px;
+}
+
+.radio-dropdown .dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
+  width: fit-content;
+}
+
+.radio-dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.radio-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.radio-input {
+  display: none;
+}
+
+.radio-label {
+  cursor: pointer;
+  padding-right: 10px;
+  position: relative;
+  display: inline-block;
+  padding-right: 30px;
+}
+
+.radio-circle {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  transition: all 0.3s ease;
+}
+
+.radio-input:checked+.radio-label .radio-circle {
+  background-color: #965a38;
+  border-color: #965a38;
+}
+
+.radio-input:checked+.radio-label .radio-circle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+/* ------------------------------------form css----------------------------------------- */
+.container {
+  flex-direction: row;
+  position: absolute;
+  height: 75vh;
+  width: 80vw;
+  z-index: 1;
+  background-color: white;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.form {
+  position: relative;
+  margin: 20px;
+  justify-items: self-start;
+  justify-self: self-start;
+}
+
+.form-column {
+  height: 40vh;
+
+}
+
+.form-label {
+  margin-bottom: 5px;
+}
+
+.form-control {
+  margin-bottom: 5px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.form-control:focus {
+  border-color: white;
+  box-shadow: 0 0 10px rgba(183, 120, 72, 1);
+}
+
+.form-check input:focus {
+  border-color: #B77848;
+  box-shadow: 0 0 10px rgba(183, 120, 72, 1);
+}
+
+.form-check-input:checked {
+  background-color: #b77848;
+  border-color: #b77848;
+}
+
+.form-check-input {
+  margin: 8px;
+  border-color: #4e2e159a;
+}
+
+.forgot-password-link {
+  color: #B77848;
+  font-size: 10px;
+  display: block;
+  text-align: left;
+  margin-top: 5px;
+  text-decoration: none;
+}
+
+.forgot-password-link:hover {
+  color: #965a38;
+  text-decoration: underline;
+}
+
+
+.btn {
+  justify-self: center;
+  margin: 0px;
+  width: 150px;
+  color: #4e2e15;
+  border: 1px solid #4e2e15;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.btn:hover {
+  background-color: #965a38;
+  color: white;
+}
+
+.form-label {
+  color: #B77848;
+  align-self: start;
+}
+
+.btn-custom {
+  color: white;
+  background-color: #B77848;
+  border: 1px solid #B77848;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-custom:hover {
+  color: white;
+  background-color: #736C74;
+  border: 1px solid #B77848;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-custom:active {
+  color: white;
+  background-color: #736C74;
+  border: 1px solid #B77848;
+}
+
+/* ------------------------------------image css----------------------------------------- */
+
+  
+.img-container {
+  height: 100%; 
+  width: 60.333%; 
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  position: relative;
+  direction: ltr;
+
+}
+.img-container img {
+  width: 53vw;
+  height: 76vh;
+  object-fit: cover;
+  z-index: 1; 
+}
+
+.text-overlay {
+  top: 50%;
+  left: 25%;
+  position: absolute; 
+  z-index: 2; 
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  user-select: none; 
+}
+
+
+/* ------------------------------------small sceen css----------------------------------------- */
+
+@media (max-width: 768px) {
+  .radio-dropdown{
+    right: -53vw;
+    top: 2.5vh;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 75vh;
+    width: 70vw;
+    margin: 20px;
+
+  }
+  .logo {
+    top: 5vh;
+    position: fixed;
+    width: 60px;
+    height: auto;
+    left: 5vw;
+  }
+
+  .row {
+    margin: 0;
+    width: auto;
+  }
+
+  .col-5 {
+    margin: 0;
+    flex: 0 0 auto;
+    width: auto;
+    padding: 0;
+  }
+
+  .col-7 {
+    display: none;
+  }
+
+  .card-container {
+    width: 65vw;
+    height: 60vh;
+    margin: 20px;
+
+  }
+
+  .card {
+    height:60vh;
+    width: auto;
+  }
+
+  .bottom-left, .top-right {
+    display: none;
+  }
+
+  .bottom-left {
+    bottom: 0;
+    left: 0;
+    width: 60%;
+    bottom: -15vh;
+    left: -5vw;
+  }
+
+  .top-right {
+    top: -1vh;
+    right: -1vw;
+    width: 40%;
+  }
+}
+
+/* -------------------------------------------------staff home css */
+.choices{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+}
+.choice {
+  padding: 50px;
+
+  border-radius: 8px; 
+   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);      
+  transition: all 0.3s ease;
+}
+
+.choice:hover {
+  background: #EC8305;        
+  color: white;             
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); 
+  transform: translateY(-8px); 
+}
+a{
+    text-decoration: none;
+    color: black;
+}
+
+
+
+ .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropbtn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 22px;
+      color: #333;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: #fff;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+      border-radius: 8px;
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      color: #333;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      transition: background 0.2s;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f5f5f5;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    .profile {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+    }
+/* Start a call dropdown */
+.dropdownchoices {
+  position: relative;
+  display: inline-block;
+}
+
+
+.dropdownchoices .choice:hover {
+  background: #EC8305;
+  color: white;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-5px);
+}
+
+/* Dropdown menu under "Start a call" */
+.dropdownchoices .dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;   /* directly under the button */
+  left: 0;
+  background: white;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+  border-radius: 8px;
+  z-index: 10;
+}
+
+.dropdownchoices .dropdown-menu a {
+  display: block;
+  padding: 12px 16px;
+  color: black;
+  text-decoration: none;
+}
+
+.dropdownchoices .dropdown-menu a:hover {
+  background: #f2f2f2;
+}
+
+/* Show dropdown when hovering "Start a call" */
+.dropdownchoices:hover .dropdown-menu {
+  display: block;
+}
+
+
+.actions{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+}
+.action{
+  padding: 10px;
+
+  border-radius: 4px; 
+   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);      
+  transition: all 0.3s ease;
+}
+
+.action:hover {
+  background: #EC8305;        
+  color: white;             
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); 
+  transform: translateY(-4px); 
+}
