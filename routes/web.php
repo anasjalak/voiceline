@@ -5,7 +5,8 @@ use  App\Http\Controllers\{
     DashboardRedirectController,
     AdminDashboardController,
     SupervisorDashboardController,ProfileController,
-    UserDashboardController
+    UserDashboardController,
+    AuthenticatedSessionController
 };
 use Illuminate\Support\Facades\Route;
  
@@ -19,9 +20,12 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 */
 Route::middleware('auth')->group(function () {
+    
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+      Route::patch('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
 });
 
 require __DIR__.'/auth.php';
@@ -45,3 +49,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware('role:user')
         ->name('user.dashboard');
 });
+ Route::get('/student', function () {
+    return view('student');
+})->name('student');
+
+

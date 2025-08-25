@@ -1,36 +1,73 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="en">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@yield('title', 'voice Line System')</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+  <!-- Bootstrap + Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ asset('css/login.css') }}">
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
-    </body>
+  
+
+  @stack('styles') <!-- Optional page-specific styles -->
+
+  
+</head>
+
+<body>
+
+  <!-- Logo -->
+  <picture>
+    <source srcset="{{ asset('assets/logowithname.svg') }}" type="image/svg+xml">
+    <img src="{{ asset('assets/logowithname.svg') }}" class="logo" alt="logo" draggable="false">
+  </picture>
+
+  <!-- Decorative Images -->
+  <img src="{{ asset('assets/bottomleft.svg') }}" class="bottom-left" alt="bottomleft" draggable="false">
+  <img src="{{ asset('assets/topright.svg') }}" class="top-right" alt="topright" draggable="false">
+
+  <!-- User Profile Dropdown -->
+  <div class="profile">
+    <div class="dropdown">
+      <button class="dropbtn">
+        <i class="fa-solid fa-circle-user" style="color: white; font-size: 38px;"></i>
+      </button>
+      <div class="dropdown-content">
+        <a href="{{ url('/profile') }}">Profile</a>
+         <a href="{{ route('logout') }}"
+   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+    Logout
+</a>
+
+<form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+    @csrf
+</form>
+      </div>
+    </div>
+  </div>
+
+
+  
+  <!-- Main Navigation Choices -->
+  
+  <!-- Main Content Area -->
+  <main>
+    @yield('content')
+  </main>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+  @stack('scripts') <!-- Optional page-specific scripts -->
+</body>
+
 </html>

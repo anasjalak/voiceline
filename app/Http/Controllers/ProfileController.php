@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 class ProfileController extends Controller
 {
     /**
@@ -16,26 +17,34 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        $user = Auth::user();
+       return view('profile.edit', compact('user'));
+  
     }
 
-    /**
+    /**  
      * Update the user's profile information.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+       $user = Auth::user();
+ 
+        // validate input
+        $request->validate([
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id, // exclude current user
+        
+        ]);
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+        // update user
+        $user->update([
+            'name'  => $request->name,
+            'email' => $request->email,
+           
+        ]);
 
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    }
+        return redirect()->route('profile.edit')->with('success', 'Profile updated successfully!');
+    }  
 
     /**
      * Delete the user's account.
@@ -47,9 +56,7 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
-
         Auth::logout();
-
         $user->delete();
 
         $request->session()->invalidate();
@@ -57,4 +64,18 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+    public function updatePassword(Request $request)
+{
+    $request->validate([
+        'oldPassword' => ['required', 'current_password'], // Laravel 8+ has this rule
+        'newPassword' => ['required', 'min:3', 'confirmed'], // confirmed = check confirmPassword
+    ]);
+
+    $user = $request->user();
+    $user->password = Hash::make($request->newPassword);
+    $user->save();
+
+    return back()->with('success', 'Password updated successfully!');
+}
+
 }
