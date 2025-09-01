@@ -5,15 +5,10 @@
  
 @section('content')
   <div class="choices">
-    <!-- Start a call with dropdown -->
-    <div class="dropdownchoices">
-        <a class="choice" href="javascript:void(0);">
-            <span>Start a call</span>
-        </a>
-         
-         
-    </div>
-
+        
+<a class="choice" href="{{ route('calls.create') }}">
+        <span>Reports</span>
+    </a>
     <!-- Optional additional nav items -->
     <a class="choice" href="{{ url('reports') }}">
         <span>Reports</span>
@@ -21,6 +16,7 @@
     <a class="choice" href="{{ route('student') }}">
         <span>Direct</span>
     </a>
+    
 </div>
 
 @endsection

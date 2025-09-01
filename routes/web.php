@@ -2,12 +2,13 @@
 
 use  App\Http\Controllers\{
     StudentController,
-    DashboardRedirectController,
+    DashboardRedirectController,TicketController,
     AdminDashboardController,
     SupervisorDashboardController,ProfileController,
-    UserDashboardController,
+    UserDashboardController,CallController,
     AuthenticatedSessionController
 };
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
  
 
@@ -49,8 +50,43 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware('role:user')
         ->name('user.dashboard');
 });
+// student section
  Route::get('/student', function () {
     return view('student');
 })->name('student');
 
+Route::post('/student-view', [StudentController::class, 'studentView'])->name('studentview');
 
+// routes/web.php
+
+
+Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+
+Route::post('/student/insert', [StudentController::class, 'insert'])->name('student.insert');
+
+// go get std info from controller 
+Route::get('/get-student/{id}', [StudentController::class, 'getStudent']);
+
+
+Route::get('/studentview/{stud_id}', [StudentController::class, 'getStudentData']);
+ 
+
+
+// call section 
+// routes/web.php
+Route::prefix('calls')->group(function() {
+    Route::post('/store', [CallController::class, 'store'])->name('calls.store');
+    Route::get('/search-student', [CallController::class, 'searchStudent'])->name('calls.searchStudent');
+    Route::get('/search-ticket', [CallController::class, 'searchTicket'])->name('calls.searchTicket');
+});
+
+Route::get('/calls/search', [CallController::class, 'search'])->name('calls.search');
+Route::get('/calls/create', function () {
+    return view('calls.create');
+})->name('calls.create');
+
+/// for tickets
+Route::get('/ticket/view', [TicketController::class, 'view'])->name('ticket.view');
+
+Route::get('/search-ticket/{ticketId}', [TicketController::class, 'search'])->name('ticket.search');

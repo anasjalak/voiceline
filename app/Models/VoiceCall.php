@@ -21,3 +21,4 @@ class VoiceCall extends Model
         'ticket_number'  // <-- add here
     ];
 }
+ 
