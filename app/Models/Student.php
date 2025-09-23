@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+ 
 class Student extends Model
 {
     protected $table = 'students';
+    protected $connection = 'mysql_sis2';
     protected $primaryKey = 'stud_id';
   public $timestamps = false;
 protected $fillable = [

@@ -67,6 +67,7 @@ Route::post('/student/insert', [StudentController::class, 'insert'])->name('stud
 
 // go get std info from controller 
 Route::get('/get-student/{id}', [StudentController::class, 'getStudent']);
+Route::get('/search-ticket/{trackid}', [StudentController::class, 'getTicket']);
 
 
 Route::get('/studentview/{stud_id}', [StudentController::class, 'getStudentData']);
@@ -78,7 +79,8 @@ Route::get('/studentview/{stud_id}', [StudentController::class, 'getStudentData'
 Route::prefix('calls')->group(function() {
     Route::post('/store', [CallController::class, 'store'])->name('calls.store');
     Route::get('/search-student', [CallController::class, 'searchStudent'])->name('calls.searchStudent');
-    Route::get('/search-ticket', [CallController::class, 'searchTicket'])->name('calls.searchTicket');
+     Route::get('/search-ticket', [CallController::class, 'searchTicket'])->name('calls.searchTicket');
+  
 });
 
 Route::get('/calls/search', [CallController::class, 'search'])->name('calls.search');
@@ -90,3 +92,8 @@ Route::get('/calls/create', function () {
 Route::get('/ticket/view', [TicketController::class, 'view'])->name('ticket.view');
 
 Route::get('/search-ticket/{ticketId}', [TicketController::class, 'search'])->name('ticket.search');
+// for Voice Call submit
+  Route::post('/voice-calls/store', [CallController::class, 'store'])
+    ->name('voicecalls.store')
+    ->middleware('auth');  
+    

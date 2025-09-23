@@ -75,33 +75,43 @@
   <!-- Bottom-right image -->
   <img src="assets/topright.svg" class="top-right" alt="topright" draggable="false">
   
-  <form action="">
+ 
+
+<form action="{{ route('voicecalls.store') }}" method="POST">
+    @csrf
     <!-- Radios -->
+   @if(session('success'))
+        <div id="success-message" class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+        </div>
+    @endif
+
+
     <div class="field caller-tabs" 
          style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; margin-bottom: 80px;">
 
       <div class="radio-group">
         <div class="slider"></div>
 
-        <input type="radio" name="caller" id="caller-student" value="student" hidden checked>
+        <input type="radio"   name="customer_type" id="caller-student" value="student" hidden checked>
         <label for="caller-student">
           <span>Student</span>
           <img src="assets/student.png" alt="student" class="tabicon">
         </label>
 
-        <input type="radio" name="caller" id="caller-parent" value="parent" hidden>
+        <input type="radio"   name="customer_type" id="caller-parent" value="parent" hidden>
         <label for="caller-parent">
           <span>Parent</span>
           <img src="assets/parent.png" alt="parent" class="tabicon">
         </label>
 
-        <input type="radio" name="caller" id="caller-staff" value="staff" hidden>
+        <input type="radio"   name="customer_type" id="caller-staff" value="staff" hidden>
         <label for="caller-staff">
           <span>Staff</span>
           <img src="assets/staff.png" alt="staff" class="tabicon">
         </label>
 
-        <input type="radio" name="caller" id="caller-general" value="general" hidden>
+        <input type="radio"  name="customer_type" id="caller-general" value="general" hidden>
         <label for="caller-general">
           <span>General</span>
           <img src="assets/general.png" alt="general" class="tabicon">
@@ -113,10 +123,16 @@
     <div class="field" id="index-field" style="display: flex; flex-direction: row; gap: 20px;">
       <div style="flex: 1 1 25%;">
         <div class="label">Index</div>
-        <input type="text" id="indexInput" style="width: 100%;">
+        <input type="text" id="indexInput" name="stud_index" style="width: 100%;">
             <div style="flex: 1 1 25%;">
         <div class="label">Get Ticket #</div>
         <input type="text" id="ticketno" style="width: 100%;"> 
+      </div>
+      
+        <div style="flex: 1 1 25%;">
+        <div class="label" >Student Index #:</div>
+        <div class="label" id="stud_id" name ="stud_id"></div>
+        <input type="hidden" name="stdindexno" id="stdindexno">
       </div>
       </div>
       <div style="flex: 1 1 25%;">
@@ -140,15 +156,15 @@
     <div class="flex">
       <div class="field" id="name-field">
         <div class="label">Name</div>
-        <input type="text" id="name">
+        <input type="text" id="name" name="caller_Name">
       </div>
       <div class="field" id="id-field">
         <div class="label">Staff ID</div>
-        <input type="text" id="id">
+        <input type="text" id="id" name="staff_id">
       </div>
       <div class="field" id="parent-field">
         <div class="label">Phone</div>
-        <input type="text" id="phone">
+        <input type="text" id="phone" name="phone">
       </div>
     </div>
     
@@ -173,11 +189,11 @@
     <!-- Rest of your form -->
     <div class="field">
       <div class="label">Issue</div>
-      <textarea id="issue" rows="4"></textarea>
+      <textarea id="issue" name="issue" rows="4"></textarea>
     </div>
     <div class="field">
       <div class="label">Category</div>
-      <select id="category">
+      <select id="category" name="category">
         <option value="" selected></option>
         <option value="1">Data Follow and Verification</option>
         <option value="42">General Inquiries</option>
@@ -188,35 +204,35 @@
     <div class="flex">
       <div class="field">
         <div class="label">Ticket Number</div>
-        <input type="text" id="ticketNumber">
+        <input type="text" id="ticketNumber" name="ticket_number">
       </div>
 
       <div class="field">
         <div class="label">Ticket URL</div>
-        <input type="text" id="ticketURL">
+        <input type="text" id="ticketURL" name="ticket_url">
       </div>
 
       <div class="field">
         <div class="label">Found Status</div>
-        <input type="text" id="foundStatus">
+        <input type="text" id="foundStatus" name="foundStatus">
       </div>
     </div>
     
     <div class="flex">
       <div class="field">
         <div class="label">Priority</div>
-        <input type="text" id="priority">
+        <input type="text" id="priority" name="priority">
       </div>
 
       <div class="field">
         <div class="label">Assigned To</div>
-        <input type="text" id="assignedTo">
+        <input type="text" id="assignedTo" name="assignedTo">
       </div>
     </div>
     
     <div class="field">
       <div class="label">Final Status</div>
-      <select id="finalStatus">
+      <select id="finalStatus" name="Final_Status">
         <option value="" selected></option>
         <option value="1">Resolved</option>
         <option value="2">Submitted</option>
@@ -226,12 +242,13 @@
 
     <div class="field">
       <div class="label">Solution Note</div>
-      <textarea id="solutionNote" rows="5"></textarea>
+      <textarea id="solutionNote" name="Solution_Note" rows="5"></textarea>
     </div>
 
     <div class="btn" style="width: 100%;">
       <button type="submit">Submit Ticket</button>
     </div>
+    
   </form>
 
   <!-- Modal -->
@@ -272,6 +289,31 @@
               </table>
             </div>
           </div>
+
+          <!-- Subjects Table -->
+          <div class="row mb-2">
+            <div class="col-12 mb-2">
+              <p><b>Tickets:</b></p>
+            </div>
+            <div class="col-12">
+              <table class="table table-bordered table-sm align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th style="color: #EC8305;">Ticket ID</th>
+                    <th style="color: #EC8305;">Ticket Subject</th>
+                    <th style="color: #EC8305;">URL</th>
+                    <th style="color: #EC8305;">Get</th>
+                    <th style="color: #EC8305;">Remark</th>
+                  </tr>
+                </thead>
+                <tbody id="ticketsTable">
+                  <tr>
+                    <td colspan="4" class="text-center">No data available</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
            
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -279,7 +321,7 @@
   <!-- Toggle Logic in JS -->
   <script>
 
-  const radios = document.querySelectorAll('input[name="caller"]');
+  const radios = document.querySelectorAll('input[name="customer_type"]');
   const fields = {
     parent: document.getElementById("parent-field"),
     faculty: document.getElementById("faculty-field"),
@@ -340,7 +382,7 @@
 
   // Initial position
   window.addEventListener("load", () => {
-    const checked = document.querySelector('input[name="caller"]:checked');
+    const checked = document.querySelector('input[name="customer_type"]:checked');
     if (checked) {
       updateVisibility(checked.value);
     }
@@ -348,7 +390,7 @@
 
   // Recalculate on resize
   window.addEventListener("resize", () => {
-    const checked = document.querySelector('input[name="caller"]:checked');
+    const checked = document.querySelector('input[name="customer_type"]:checked');
     if (checked) {
       updateVisibility(checked.value);
     }
@@ -367,108 +409,112 @@
     get_ticket_records(ticketno);
     } else if (studentId && studentId.trim() !== "") {
       // Case 2: studentId has value
-        console.log('studentId');
-         getStudentRecord(studentId) 
+       
+         getStudentRecord(studentId) ;
     } else {
       // Case 3: neither provided
       alert("Please enter Std Id or TicketID");
     }
-  }
-
   
+  }
+   
+
  
     
   
     
   );
 
- 
  function getStudentRecord(studentId) {
-    // 🔹 إظهار Loader وإخفاء المحتوى
-   //  document.getElementById('loader').style.display = 'block';
-   //  document.getElementById('studentContent').style.display = 'none';
-
-    fetch(`/get-student/${studentId}`)
+    console.log("Fetching student data:", `/get-student/${studentId}`);
+                           
+    fetch(`{{ url('/get-student') }}/${studentId}`)
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+            if (!response.ok) throw new Error('Network response was not ok');
             return response.json();
         })
         .then(data => {
-           
-            console.log("Jason Data:", data);
-            
-            // ✅ تعبئة النموذج
+            if (!data.success) {
+                alert(data.message || 'Error loading student data');
+                return;
+            }
+
+            // ✅ Fill the form fields
+            document.getElementById('stud_id').innerText = data.student.stud_id || '';
+            document.getElementById('stdindexno').value = data.student.stud_id || '';  
             document.getElementById('name').value = data.student.name || '';
             document.getElementById('facultyInput').value = data.student.faculty || '';
             document.getElementById('batchInput').value = data.student.batch || '';
-            document.getElementById('facultyInput').value = data.student.faculty || '';
             document.getElementById('majorInput').value = data.student.major || '';
            
-             document.getElementById('studentName').textContent = data.student.name || 'N/A';
+            // ✅ Fill the modal content
+            document.getElementById('studentName').textContent = data.student.name || 'N/A';
             document.getElementById('studentMajor').textContent = data.student.major || 'N/A';
             document.getElementById('studentBatch').textContent = data.student.batch || 'N/A';
             document.getElementById('studentSemester').textContent = data.student.semester || 'N/A';
             document.getElementById('studentStatus').textContent = data.student.status || 'N/A';
-        
-        
-          })
+
+            // ✅ Clear old tickets
+            const ticketsTable = document.getElementById('ticketsTable');
+            ticketsTable.innerHTML = "";
+ 
+            if (data.tickets && data.tickets.length > 0) {
+                data.tickets.forEach(ticket => {
+                    const row = `
+                        <tr>
+                            <td>${ticket.trackid || ''}</td>
+                            <td>${ticket.subject || ''}</td>
+                            <td><a href="https://hdesk.fu.edu.sd/admin/admin_ticket.php?track=${ticket.trackid}" target="_blank" >View</a></td>
+                           <td><a href="javascript:void(0);" onclick="fillTicketForm('${ticket.trackid}')">Get</a></td>
+
+                            <td>${ticket.priority || ''}</td>
+                        </tr>`;
+                    ticketsTable.insertAdjacentHTML('beforeend', row);
+                });
+            } else {
+                ticketsTable.innerHTML = `<tr><td colspan="4" class="text-center">No tickets found</td></tr>`;
+            }
+        })
         .catch(error => {
             console.error('Error:', error);
-          //  document.getElementById('loader').style.display = 'none';
-          //  document.getElementById('studentContent').style.display = 'block';
-            document.getElementById('studentName').textContent = "Error loading student";
+            alert('Error loading student data: ' + error.message);
         });
 }
- function get_ticket_records(ticketno){
-  
-    fetch(`/search-ticket/${ticketno}`)
-    
+
+function fillTicketForm(trackid) {
+     fetch(`/search-ticket/${trackid}`)
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            if (!response.ok) {  // لو السيرفر رجّع 404 أو 500
+                throw new Error('HTTP error! status: ' + response.status);
             }
             return response.json();
         })
         .then(data => {
-           
-            console.log("Jason Data:", data.ticketNumber);
-            
-            // ✅ تعبئة النموذج
-            //  document.getElementById('indexInput').value = data.student.stud_id || '';
-            document.getElementById('name').value = data.student.stud_name || '';
-            document.getElementById('facultyInput').value = data.student.faculty || '';
-            document.getElementById('batchInput').value = data.student.batch || '';
-            document.getElementById('facultyInput').value = data.student.faculty_code || '';
-            document.getElementById('majorInput').value = data.student.major_code || '';
-             document.getElementById('studentName').textContent = data.student.stud_name || 'N/A';
-            document.getElementById('studentMajor').textContent = data.student.major_code || 'N/A';
-            document.getElementById('studentBatch').textContent = data.student.batch || 'N/A';
-            document.getElementById('studentSemester').textContent = data.student.curr_sem || 'N/A';
-            document.getElementById('studentStatus').textContent = data.student.status_code || 'N/A';
-            document.getElementById('ticketNumber').value=data.ticket.ticket_number || 'N/A';
-      document.getElementById('ticketURL').value = data.ticket.ticket_url || 'N/A';
-       document.getElementById('foundStatus').value = data.ticket.Ticket_status || 'N/A';
-        document.getElementById('priority').value = data.ticket.priority || 'N/A';
-         document.getElementById('assignedTo').value = data.ticket.opened_type || 'N/A';
-       /*    ticketNumber
-           ticketURL
-           foundStatus
-           priorit
-           assignedTo
-*/
-           
-        
-          })
-        .catch(error => {
-            console.error('Error:', error);
-          //  document.getElementById('loader').style.display = 'none';
-          //  document.getElementById('studentContent').style.display = 'block';
-            document.getElementById('studentName').textContent = "Error loading student";
-        });
+            if (!data.success) {
+                alert("لم يتم العثور على بيانات التذكرة");
+                return;
+            }
+ 
+            const ticket = data.ticket;
 
- }
+            document.getElementById('ticketNumber').value = ticket.trackid || '';
+            document.getElementById('assignedTo').value = ticket.subject || '';
+            document.getElementById('priority').value = ticket.priority || '';
+            document.getElementById('ticketURL').value = ticket.subject || '';
+             document.getElementById('foundStatus').value = ticket.foundStatus || '';
+            
+              
+            let modalEl = document.getElementById('StatusModal');
+            let modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+        })
+       .catch(error => {  
+           console.error("Error fetching ticket data:", error);
+             alert("حصل خطأ أثناء تحميل بيانات التذكرة: " + error.message);
+        });
+       
+}
+
 
   </script>
 
@@ -495,6 +541,16 @@
 
 </script>
 
-
+<script>
+  // اختفائها رسالة التنبيه بحفظ السجل
+    setTimeout(() => {
+        let msg = document.getElementById('success-message');
+        if (msg) {
+            msg.style.transition = "opacity 0.5s ease";
+            msg.style.opacity = "0";
+            setTimeout(() => msg.remove(), 500); // يحذف الرسالة بعد اختفائها
+        }
+    }, 3000);
+</script>
 </body>
 </html>

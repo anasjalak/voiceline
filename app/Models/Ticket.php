@@ -6,17 +6,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class Ticket extends Model {
-    protected $table = 'tickets';
-    protected $primaryKey = 'ticket_serial_no';
+     protected $connection = 'mysql_hdesk';
+    protected $table = 'hesk_tickets';
+    protected $primaryKey = 'id';
     public $timestamps = false;
 
-    protected $fillable = [
-        'ticket_number','ticket_id','ticket_category','issue_date',
-        'opened_type','opened_by_whois','Ticket_status','priority','ticket_url'
+    protected $fillable = ['trackid', 'name','email', 'category', 'priority', // `subject`, `message`, `message_html`, `dt`, `lastchange`, `firstreply`, `closedat`, `articles`, `ip`, `language`, `status`, `openedby`, `firstreplyby`, `closedby`, `replies`, `staffreplies`, `owner`, `assignedby`, `time_worked`, `lastreplier`, `replierid`, `archive`, `locked`, `attachments`, `merged`, `history`, `custom1`,,
     ];
 
     public function student() {
-        return $this->belongsTo(Student::class, 'opened_by_whois', 'stud_id');
+        return $this->belongsTo(Student::class, 'custom1', 'stud_id');
     }
 
      

@@ -2,241 +2,197 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Record</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 20px;
-        }
-        .student-card {
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            border: none;
-            margin: 20px auto;
-            max-width: 900px;
-        }
-        .card-header {
-            background-color: #fff;
-            border-bottom: 2px solid #EC8305;
-            padding: 15px 20px;
-        }
-        .card-title {
-            color: #EC8305;
-            font-weight: bold;
-            margin: 0;
-        }
-        .card-body {
-            padding: 20px;
-        }
-        .info-item {
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-        .info-item b {
-            color: #495057;
-        }
-        .table-title {
-            color: #495057;
-            margin-top: 25px;
-            margin-bottom: 10px;
-            font-weight: bold;
-            font-size: 17px;
-        }
-        .table thead th {
-            background-color: #f8f9fa;
-            color: #EC8305 !important;
-            font-weight: 600;
-        }
-        .close-btn {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 5px;
-            padding: 5px 15px;
-            color: #6c757d;
-            transition: all 0.3s;
-        }
-        .close-btn:hover {
-            background-color: #EC8305;
-            color: white;
-        }
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-weight: 500;
-        }
-        .status-active {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        .status-inactive {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        @media (max-width: 768px) {
-            .student-card {
-                margin: 10px;
-            }
-        }
-    </style>
+    <title>Student & Tickets</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
 </head>
-<body>
+<body class="p-4">
 
-<div class="card student-card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="card-title"><i class="bi bi-person-badge me-2"></i>Std Status</h5>
-        <button class="close-btn" onclick="window.history.back()">
-            <i class="bi bi-x-lg me-1"></i>Close
-        </button>
+    <!-- 🔎 إدخال البحث -->
+    <div class="mb-3 d-flex gap-2">
+        <input type="text" id="indexInput" class="form-control w-25" placeholder="أدخل رقم الطالب">
+        <input type="text" id="ticketno" class="form-control w-25" placeholder="أدخل رقم التذكرة">
+        <button id="btngetstdrecord" class="btn btn-primary">بحث</button>
     </div>
-    <div class="card-body">
-        <div class="info-item"><b>Name:</b> <span id="studentName"> {{ session('student_name') }}</span></div>
-        <div class="info-item"><b>Major:</b> <span id="studentMajor">{{ session('major') }}</span></div>
-        <div class="info-item"><b>Batch:</b> <span id="studentBatch">{{ session('batch')  }}</span></div>
-        <div class="info-item"><b>Sem:</b> <span id="studentSemester">{{ session('semester')  }}</span></div>
-        <div class="info-item"><b>Status:</b> <span id="studentStatus" class="status-badge status-active">{{ session('status')  }}</span></div>
-        
-        <!-- جدول المواد -->
-        <div class="table-title">(F/Z/I) Courses:</div>
-        <div class="table-responsive">
-            <table class="table table-bordered table-sm align-middle">
-                <thead class="table-light">
+
+    <!-- 📌 بيانات الطالب -->
+    <div class="card mb-4">
+        <div class="card-header">بيانات الطالب</div>
+        <div class="card-body row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Student ID</label>
+                <input type="text" id="stdindexno" class="form-control" readonly>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Name</label>
+                <input type="text" id="name" class="form-control" readonly>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Faculty</label>
+                <input type="text" id="facultyInput" class="form-control" readonly>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Major</label>
+                <input type="text" id="majorInput" class="form-control" readonly>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Batch</label>
+                <input type="text" id="batchInput" class="form-control" readonly>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🎟️ بيانات التذاكر -->
+    <div class="card mb-4">
+        <div class="card-header">التذاكر</div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
                     <tr>
-                        <th style="color: #EC8305;">Sem</th>
-                        <th style="color: #EC8305;">Crs Name</th>
-                        <th style="color: #EC8305;">Grades</th>
-                        <th style="color: #EC8305;">Notes</th>
+                        <th>Ticket ID</th>
+                        <th>Subject</th>
+                        <th>Link</th>
+                        <th>Priority</th>
                     </tr>
                 </thead>
-                <tbody id="studentSubjectsTable">
-                    <tr>
-                        <td>الأول</td>
-                        <td>برمجة 1</td>
-                        <td>F</td>
-                        <td>محولة</td>
-                    </tr>
-                    <tr>
-                        <td>الثاني</td>
-                        <td>هياكل البيانات</td>
-                        <td>I</td>
-                        <td>غير مكتملة</td>
-                    </tr>
-                    <tr>
-                        <td>الثالث</td>
-                        <td>قواعد البيانات</td>
-                        <td>Z</td>
-                        <td>محذوفة</td>
-                    </tr>
-                </tbody>
+                <tbody id="ticketsTable"></tbody>
             </table>
         </div>
-        
-        <!-- جدول التذاكر -->
-        <div class="table-title">التذاكر الحديثة:</div>
-        <div class="table-responsive">
-                    <!-- جدول التذاكر -->
-        <div class="table-title">التذاكر الحديثة:</div>
-        <div class="table-responsive">
-                      <table class="table table-bordered table-sm align-middle">
-              <thead class="table-light">
-                <tr>
-                  <th style="color: #EC8305;">ticket_number</th>
-                  <th style="color: #EC8305;">Ticket_status</th>
-                  <th style="color: #EC8305;">ticket_url</th>
-                  <th style="color: #EC8305;">opened_type</th>
-                </tr>
-              </thead>
-              <tbody>
-        @if(session()->has('tickets'))
-        @foreach(session('tickets') as $ticket)
-            <tr>
-                <td>{{ $ticket->ticket_number ?? '-' }}</td>
-                <td>{{ $ticket->ticket_category ?? '-' }}</td>
-                <td>{{ $ticket->opened_type ?? '-' }}</td>
-                <td>{{ $ticket->ticket_url ?? '--' }}</td>
-            </tr>
-        @endforeach
-    @else
-        <tr>
-            <td colspan="4">No courses found</td>
-        </tr>
-    @endif
-    </tbody>
+    </div>
+
+    <!-- 📑 التذكرة الحالية -->
+    <div class="card mb-4">
+        <div class="card-header">بيانات التذكرة الحالية</div>
+        <div class="card-body row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Ticket Number</label>
+                <input type="text" id="ticketNumber" class="form-control" readonly>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Ticket URL</label>
+                <input type="text" id="ticketURL" class="form-control" readonly>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Status</label>
+                <input type="text" id="foundStatus" class="form-control" readonly>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Priority</label>
+                <input type="text" id="priority" class="form-control" readonly>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Assigned To</label>
+                <input type="text" id="assignedTo" class="form-control" readonly>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 📌 Modal عرض التفاصيل -->
+    <div class="modal fade" id="studentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تفاصيل الطالب</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p><b>الاسم:</b> <span id="studentName"></span></p>
+                    <p><b>التخصص:</b> <span id="studentMajor"></span></p>
+                    <p><b>الدفعة:</b> <span id="studentBatch"></span></p>
+                    <p><b>الفصل:</b> <span id="studentSemester"></span></p>
+                    <p><b>الحالة:</b> <span id="studentStatus"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // فرضاً هنا بتحصل على ID من الـ URL (مثال: /student-view.html?stud_id=1)
-        const urlParams = new URLSearchParams(window.location.search);
-        const studentId = urlParams.get("stud_id") || 1; // افتراضي 1
-alert(${studentId});
-        fetch(`/get-student/${studentId}`)
-            .then(response => {
-                if (!response.ok) throw new Error("Student not found");
-                return response.json();
-            })
-            .then(data => {
-                // بيانات الطالب
-                document.getElementById("studentName").textContent = data.student.name;
-                document.getElementById("studentMajor").textContent = data.student.major;
-                document.getElementById("studentBatch").textContent = data.student.batch;
-                document.getElementById("studentSemester").textContent = data.student.semester;
+    <!-- 🟦 سكريبت -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.getElementById('btngetstdrecord').addEventListener('click', function() {
+        const studentId = document.getElementById('indexInput').value.trim();
+        const ticketno  = document.getElementById('ticketno').value.trim();
 
-                const statusEl = document.getElementById("studentStatus");
-                statusEl.textContent = data.student.status;
-                statusEl.className = "status-badge " + (data.student.status === "نشط" ? "status-active" : "status-inactive");
-
-                // جدول المواد
-                const subjectsTable = document.getElementById("studentSubjectsTable");
-                subjectsTable.innerHTML = "";
-                if (data.subjects.length > 0) {
-                    data.subjects.forEach(sub => {
-                        const row = `<tr>
-                            <td>${sub.semester}</td>
-                            <td>${sub.course}</td>
-                            <td>${sub.grade}</td>
-                            <td>${sub.remark}</td>
-                        </tr>`;
-                        subjectsTable.innerHTML += row;
-                    });
-                } else {
-                    subjectsTable.innerHTML = `<tr><td colspan="4" class="text-center">لا توجد مواد</td></tr>`;
-                }
-
-                // جدول التذاكر
-                const ticketsTable = document.getElementById("studentTicketsTable");
-                ticketsTable.innerHTML = "";
-                if (data.tickets.length > 0) {
-                    data.tickets.forEach(t => {
-                        const row = `<tr>
-                            <td>#${t.id}</td>
-                            <td>${t.category}</td>
-                            <td>${t.status}</td>
-                            <td>${t.priority}</td>
-                        </tr>`;
-                        ticketsTable.innerHTML += row;
-                    });
-                } else {
-                    ticketsTable.innerHTML = `<tr><td colspan="4" class="text-center">لا توجد تذاكر</td></tr>`;
-                }
-            })
-            .catch(err => {
-                alert("خطأ: " + err.message);
-            });
+        if (!studentId && ticketno) {
+            getTicketRecords(ticketno);
+        } else if (studentId) {
+            getStudentRecord(studentId);
+        } else {
+            alert("Please enter Student ID or Ticket No");
+        }
     });
-</script>
 
+    function getStudentRecord(studentId) {
+        fetch(`{{ url('/get-student') }}/${studentId}`)
+            .then(r => r.json())
+            .then(data => {
+                if (!data.success) return alert(data.message || 'Error loading student data');
 
+                const student = data.student;
+                const tickets = data.tickets || [];
 
+                fillStudentForm(student);
+                fillStudentModal(student);
+
+                if (tickets.length > 0) {
+                    fillTicketForm(tickets[0]);
+                    fillTicketsTable(tickets);
+                }
+            })
+            .catch(err => alert("Error: " + err.message));
+    }
+
+    function getTicketRecords(ticketno) {
+        fetch(`/search-ticket/${ticketno}`)
+            .then(r => r.json())
+            .then(data => {
+                if (!data.success) return alert(data.message || 'Error loading ticket data');
+
+                fillStudentForm(data.student || {});
+                fillStudentModal(data.student || {});
+                fillTicketForm(data.ticket || {});
+            })
+            .catch(err => alert("Error: " + err.message));
+    }
+
+    function fillStudentForm(student) {
+        document.getElementById('stdindexno').value  = student.stud_id || '';
+        document.getElementById('name').value        = student.name || '';
+        document.getElementById('facultyInput').value= student.faculty || '';
+        document.getElementById('batchInput').value  = student.batch || '';
+        document.getElementById('majorInput').value  = student.major || '';
+    }
+
+    function fillStudentModal(student) {
+        document.getElementById('studentName').textContent    = student.name || 'N/A';
+        document.getElementById('studentMajor').textContent   = student.major || 'N/A';
+        document.getElementById('studentBatch').textContent   = student.batch || 'N/A';
+        document.getElementById('studentSemester').textContent= student.semester || 'N/A';
+        document.getElementById('studentStatus').textContent  = student.status || 'N/A';
+    }
+
+    function fillTicketForm(ticket) {
+        document.getElementById('ticketNumber').value = ticket.trackid || '';
+        document.getElementById('ticketURL').value    = `/ticket/${ticket.trackid || ''}`;
+        document.getElementById('foundStatus').value  = ticket.status || '';
+        document.getElementById('priority').value     = ticket.priority || '';
+        document.getElementById('assignedTo').value   = ticket.openedby || '';
+    }
+
+    function fillTicketsTable(tickets) {
+        const tbody = document.getElementById('ticketsTable');
+        tbody.innerHTML = "";
+        tickets.forEach(t => {
+            const row = `
+                <tr>
+                    <td>${t.trackid || ''}</td>
+                    <td>${t.subject || ''}</td>
+                    <td><a href="/ticket/${t.trackid}" target="_blank">View</a></td>
+                    <td>${t.priority || ''}</td>
+                </tr>
+            `;
+            tbody.insertAdjacentHTML("beforeend", row);
+        });
+    }
+    </script>
 </body>
 </html>

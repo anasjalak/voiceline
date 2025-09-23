@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
+use App\Models\VoiceCall;
+use Illuminate\Support\Facades\Auth;
 class CallController extends Controller
 {
     /**
@@ -147,22 +148,37 @@ $ticket=null;
         }
     }
 
-     public function store(Request $request)
+        public function store(Request $request)
     {
-        try {
-            DB::table('calls')->insert([
-                'customer_type' => $request->customer_type,
-                'student_id'    => $request->student_id,
-                'ticket_number' => $request->ticket_number,
-                'category'      => $request->category,
-                'priority'      => $request->priority,
-                'description'   => $request->description,
-                'created_at'    => now(),
-            ]);
-dd();
-            return response()->json(['message' => 'تم حفظ المكالمة بنجاح']);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'فشل الحفظ: ' . $e->getMessage()], 500);
-        }
-}
+        $validated = $request->validate([
+     /*       'ticket_number'      => 'nullable|string|max:25',
+            'customer_type'      => 'required|in:student,parent,staff,external',
+            'stud_id'        => 'nullable|integer',
+            'category'           => 'required|integer',
+            'issue'              => 'nullable|string',
+            'Found_Status'       => 'nullable|string|max:50',
+            'Final_Status'       => 'nullable|string|max:50',
+            'priority'           => 'nullable|in:low,medium,high,urgent',
+       */      
+        ]); 
+        $voiceCall = VoiceCall::create([
+        'customer_type'      => $request->input('customer_type'),
+        'stud_id'        => $request->input('stdindexno'||'stud_id'),
+        'ticket_number'=> $request->input('ticket_number' ?? 'UNKNOWN'),
+        'category'           => $request->input('category'),
+        'issue'        => $request->input('issue'),
+         'Solution_Note'        => $request->input('Solution_Note'),
+        'Found_Status'        => $request->input('Found_Status'),
+        'Final_Status'        => $request->input('Final_Status'),
+        'priority'           => $request->input('priority') ?? 'medium',
+        'handled_by_user_id' => auth()->id(),  
+ 
+        'staff_ID'=>$request->input('staff_ID'),
+        'parent_name'=>$request->input('caller_Name' ),
+        'parent_phone'=>$request->input('phone'),
+        ]);
+// dd($request);
+        return redirect()->back()->with('success', 'Voice Call saved successfully!');
+    }
+ 
 }

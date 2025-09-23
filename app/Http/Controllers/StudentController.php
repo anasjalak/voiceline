@@ -97,7 +97,7 @@ class StudentController extends Controller
 
     return view('students.results', [
         'students' => $students,
-        'parents' => $tickets,
+        'tickets' => $tickets,
     ]);
 }
 
@@ -125,8 +125,8 @@ public function getStudent_old($id)
             'batch'     => $student->batch,
             'gpa'       => $student->stud_gpa,
             'cgpa'      => $student->stud_cgpa,
-            'status'    => $student->status_code,
-            'semester'  => $student->curr_sem,
+     //       'status'    => $student->status_code,
+      //      'semester'  => $student->curr_sem,
         ]
     ]);
 }
@@ -163,44 +163,179 @@ public function studentView(Request $request)
 
 public function getStudent($id)
 {
-    $student = Student::with([ 'tickets'])->where('stud_id', $id)->first();
  
-    if (!$student) {
+    try {
+        // التحقق من صحة رقم الطالب
+        if (empty($id) || !is_numeric($id)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid student ID'
+            ], 400);
+        }
+
+        // استرجاع بيانات الطالب
+        $student = DB::connection('mysql_sis2')->table('student_profile_e as sp')
+            ->join('student_profile_common as SPC', 'SPC.stud_id', '=', 'sp.stud_id')
+            ->join('faculty as F', 'F.faculty_code', '=', 'SPC.faculty_code')
+            ->join('major as M', function($join) {
+                $join->on('M.major_code', '=', 'SPC.major_code')
+                     ->on('M.faculty_code', '=', 'F.faculty_code');
+            })
+            ->where('sp.stud_id', $id)
+            ->select([
+                DB::raw("CASE 
+                            WHEN SPC.status_code = 1 THEN 'Active'
+                            WHEN SPC.status_code = 0 THEN 'Not Active'
+                            ELSE 'No Data'
+                        END as status_code"),
+                'M.abbreviation as major_code',
+                'F.abbreviation as faculty_code',
+                'sp.stud_id',
+                'sp.stud_name',
+                'sp.stud_surname',
+                'sp.familyname',
+                'sp.lastName',
+                'SPC.batch',
+                'SPC.curr_sem',
+            ])
+            ->first();
+
+             $lastResult = DB::connection('mysql_sis2')->table('results')
+                    ->where('stud_id', $student->stud_id)
+                    ->orderByDesc('semester')
+                    ->select('semester', 'status', 'CGPA')
+                    ->first();
+        // تسجيل الاستعلام للتصحيح
+        \Log::info('Student query executed for ID: ' . $id);
+        \Log::info('Student data: ' . json_encode($student));
+
+        if (!$student) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Student not found'
+            ], 404);
+        }
+
+        // نجيب التذاكر
+        $tickets = DB::connection('mysql_Hdesk')->table('hesk_tickets')
+            ->where('custom1', $student->stud_id)
+             ->select('trackid', 'subject', 'status as status_code', DB::raw("CASE 
+                    WHEN priority = 1 THEN 'Normal'
+                    WHEN priority = 2 THEN 'Middle' 
+                    WHEN priority = 3 THEN 'High'
+                    WHEN priority = 4 THEN 'Critical'
+                    ELSE 'Unknown'
+                END as priority"),'priority as priority_code', DB::raw("CASE 
+                    WHEN status = 1 THEN 'CUSTOMER REPLIED'
+                    WHEN status = 2 THEN 'STAFF REPLIED' 
+                    WHEN status = 3 THEN 'RESOLVED'
+                    WHEN status = 4 THEN 'IN PROGRESS'
+                    ELSE 'Unknown'
+                END as foundStatus")) 
+               ->get();
+
+       //  Log::info('Tickets found: ' . $tickets->count());
+
+        // Extract ticket IDs and names for session
+        $ticketIds = $tickets->pluck('trackid')->toArray();
+        $ticketNames = $tickets->pluck('name')->toArray();
+
+
+
+    
+        // حفظ في الجلسة
+       // session()->put([
+         //   'student_id' => $student->stud_id,
+        //    'student_name' => trim(($student->stud_name ?? '') . ' ' . 
+         //                       ($student->stud_surname ?? '') . ' ' . 
+         //                       ($student->familyname ?? '') . ' ' . 
+         //                       ($student->lastName ?? '')),
+       //     'faculty' => $student->faculty_code ?? null,
+         //   'major' => $student->major_code ?? null,
+         //   'batch' => $student->batch ?? null,
+         //   'status' => $student->status_code ?? null,
+       //     'semester' => $student->curr_sem ?? null,
+        ///    'tickets_ID' => $ticketIds,
+        //    'tickets_name' => $ticketNames,
+       // ]);
+ // dd($lastResult);
+        return response()->json([
+            'success' => true,
+            'student' => [
+                'stud_id' => $student->stud_id,
+                'name' => trim(($student->stud_name ?? '') . ' ' . 
+                              ($student->stud_surname ?? '') . ' ' . 
+                              ($student->familyname ?? '') . ' ' . 
+                              ($student->lastName ?? '')),
+                'faculty' => $student->faculty_code,
+                'major' => $student->major_code,
+                'batch' => $student->batch,
+              //  'status' => $student->status_code,
+              //  'semester' => $student->curr_sem, 
+                'semester' => $lastResult->semester ?? null,
+                'status'   => $lastResult->status ?? 'No Data',
+                'last_cgpa'     => $lastResult->CGPA ?? null,
+            ],
+            'tickets' => $tickets
+          
+        ]);
+
+    } catch (\Exception $e) {
+        \Log::error('Error in getStudent: ' . $e->getMessage());
+        \Log::error('Stack trace: ' . $e->getTraceAsString());
+        
         return response()->json([
             'success' => false,
-            'message' => 'Student not found'
-        ], 404);
+            'message' => 'Server error: ' . $e->getMessage()
+        ], 500);
     }
-    session()->forget('tickets'); 
-   session(key: [
-        'student_id'   => $student->stud_id ?? null,
-        'student_name' =>trim(($student->stud_name ?? '') . ' ' . ($student->stud_surname ?? '') . ' ' . ($student->familyname ?? '')),
-        'faculty'   => $student->faculty_code ?? null,
-            'major'     => $student->major_code ?? null,
-            'batch'     => $student->batch ?? null,
-            'gpa'       => $student->stud_gpa ?? null,
-            'cgpa'      => $student->stud_cgpa ?? null,
-            'status'    => $student->status_code ?? null,
-            'semester'  => $student->curr_sem ?? null,
-         //   'courses'   => $student->courses  ?? [],
-            'tickets'   => $student->tickets  ?? [],
-    ]);
-    return response()->json([
-        'success' => true,
-        'student' => [
-            'stud_id'   => $student->stud_id,
-            'name'      => $student->stud_name . ' ' . $student->stud_surname . ' ' . $student->familyname,
-            'faculty'   => $student->faculty_code,
-            'major'     => $student->major_code,
-            'batch'     => $student->batch,
-            'gpa'       => $student->stud_gpa,
-            'cgpa'      => $student->stud_cgpa,
-            'status'    => $student->status_code,
-            'semester'  => $student->curr_sem,
-     //       'courses'   => $student->courses,
-            'tickets'   => $student->tickets,
-        ]
-    ]);
+}
+public function getTicket($trackid)
+{
+    try {
+
+ $ticket =  DB::connection('mysql_Hdesk')->table('hesk_tickets')
+            ->where('trackid', $trackid)
+             ->select('trackid', 'subject', 'status as status_code', DB::raw("CASE 
+                    WHEN priority = 1 THEN 'Normal'
+                    WHEN priority = 2 THEN 'Middle' 
+                    WHEN priority = 3 THEN 'High'
+                    WHEN priority = 4 THEN 'Critical'
+                    ELSE 'Unknown'
+                END as priority"),'priority as priority_code', DB::raw("CASE 
+                    WHEN status = 1 THEN 'CUSTOMER REPLIED'
+                    WHEN status = 2 THEN 'STAFF REPLIED' 
+                    WHEN status = 3 THEN 'RESOLVED'
+                    WHEN status = 4 THEN 'IN PROGRESS'
+                    ELSE 'Unknown'
+                END as foundStatus"))->first() ;
+
+   /*     $ticket = DB::connection('mysql_Hdesk')
+            ->table('hesk_tickets')
+            ->where('trackid', $trackid)
+            ->first();
+*/
+        if (!$ticket) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ticket not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'ticket' => $ticket
+        ]);
+    } catch (\Exception $e) {
+        \Log::error('Error in getTicket: '.$e->getMessage());
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Server error: '.$e->getMessage()
+        ], 500);
+    }
 }
 
 }
+
+ 
