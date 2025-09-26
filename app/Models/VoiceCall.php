@@ -30,10 +30,17 @@ class VoiceCall extends Model
 'updated_at',
            // <-- add here
     ];
-
+ public function user()
+    {
+        return $this->belongsTo(User::class, 'handled_by_user_id');
+    }
     public function ticket()
     {
         return $this->hasOne(Ticket::class, 'voice_call_id', 'call_id');
+    }
+     public function category()
+    {
+        return $this->belongsTo(Category::class, 'category');
     }
 }
  

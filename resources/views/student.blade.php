@@ -144,7 +144,7 @@
       
       
       </div>
-            <div style="flex: 1 1 35%;">
+            <div style="flex: 1 1 35%; display:none;">
         <button type="button" data-bs-target="#StatusModal" data-bs-toggle=" " id="AcademicRecord"  onclick="submitStudentForm()" 
           style="padding: 8px; border: none; background: #EC8305; color: #fff; border-radius: 6px; cursor: pointer; margin-top: 25px;">
           Get Academic Rec.
@@ -194,9 +194,30 @@
     <div class="field">
       <div class="label">Category</div>
       <select id="category" name="category">
-        <option value="" selected></option>
+         <option value="" selected></option>
         <option value="1">Data Follow and Verification</option>
         <option value="42">General Inquiries</option>
+        <option value="3">Finance</option>
+        <option value="2">Certificates and Statements</option>
+        <option value="14">E-Learning</option>
+        <option value="28">Update Ministry Graduates List</option>
+        <option value="16">CESD / CTS (Staff only)</option>
+        <option value="43">Human Resources</option>
+        <option value="24">Reports</option>
+        <option value="23">Higher Management</option>
+        <option value="30">External Transfer & Elevation</option>
+        <option value="31">New Admission</option>
+        <option value="32">Faculty of Geoinformatics</option>
+        <option value="33">Fine Arts & Interior Design</option>
+        <option value="34">Faculty of Architecture</option>
+        <option value="35">Telecommunication & Space Tech</option>
+        <option value="37">Information Technology</option>
+        <option value="38">Engineering</option>
+        <option value="39">Computer Sciences</option>
+        <option value="40">Business Administration</option>
+        <option value="41">Postgraduate Studies</option>
+        <option value="44">BetterU Service</option>
+        <option value="45">Technology Horizon Journal</option>
         <!-- Other options -->
       </select>
     </div>
@@ -474,7 +495,29 @@
             } else {
                 ticketsTable.innerHTML = `<tr><td colspan="4" class="text-center">No tickets found</td></tr>`;
             }
+// ✅ تفريغ الجدول قبل التحديث
+const subjectsTable = document.getElementById('studentSubjectsTable');
+subjectsTable.innerHTML = "";
+
+if (data.clearance && data.clearance.length > 0) {
+    data.clearance.forEach(row => {
+        const tr = `
+            <tr>
+                <td>${row.semester || ''}</td>
+                <td>${row.course_name || ''}</td>
+                <td>${row.clearance_grade || ''}</td>
+                <td>${row.remark || ''}</td>
+            </tr>`;
+        subjectsTable.insertAdjacentHTML('beforeend', tr);
+    });
+} else {
+    subjectsTable.innerHTML = `<tr><td colspan="4" class="text-center">No data available</td></tr>`;
+}
+
+
+            
         })
+        
         .catch(error => {
             console.error('Error:', error);
             alert('Error loading student data: ' + error.message);
@@ -498,7 +541,7 @@ function fillTicketForm(trackid) {
             const ticket = data.ticket;
 
             document.getElementById('ticketNumber').value = ticket.trackid || '';
-            document.getElementById('assignedTo').value = ticket.subject || '';
+            document.getElementById('assignedTo').value = ticket.owner_name || '';
             document.getElementById('priority').value = ticket.priority || '';
             document.getElementById('ticketURL').value = ticket.subject || '';
              document.getElementById('foundStatus').value = ticket.foundStatus || '';

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 24, 2025 at 01:13 AM
+-- Generation Time: Sep 24, 2025 at 04:01 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -337,7 +337,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('kGHDYBjNawbPl4qwZIvWvdxuKmgExog9oOP8ubFF', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiamRtcHJyTjdlN2tTcjJIVmhmbk9JUlhVdGUzZ3M0SXkxZkVOUmRYdCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9zZWFyY2gtdGlja2V0L1RDSy0xMDAxIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czozOiJ1cmwiO2E6MDp7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==', 1758669085);
+('aT3R3QTzi8nD82ZUCnzwF1YruGSTIFcLxQnelEzT', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoicVVVVmVlcUlNNkhHUndybnVZdU5UZ1MyV2FIZEo1MmtaUHJqSkdTSiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9zdHVkZW50Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTt9', 1758722242);
 
 -- --------------------------------------------------------
 
@@ -524,7 +524,7 @@ CREATE TABLE `voice_calls` (
   `Final_Status` varchar(25) DEFAULT NULL,
   `priority` varchar(25) NOT NULL,
   `parent_id` int(11) DEFAULT NULL,
-  `parent_name` varchar(30) DEFAULT NULL,
+  `parent_name` varchar(50) DEFAULT NULL,
   `parent_phone` varchar(30) DEFAULT NULL,
   `handled_by_user_id` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -555,7 +555,11 @@ INSERT INTO `voice_calls` (`call_id`, `ticket_number`, `customer_type`, `stud_id
 (17, '1', 'student', NULL, NULL, 1, 'SZ', '5665656', 'open', '1', 'high', NULL, 'MURTADA MOHAMMED HAMAD AHMED', NULL, 1, '2025-09-11 13:43:06', '2025-09-11 13:43:06'),
 (18, 'TCK-1001', 'student', NULL, NULL, 42, 'fdfdadsf', 'TCK-1001', NULL, '2', 'TCK-1001', NULL, 'Ali Hassan Hussein Ali', NULL, 1, '2025-09-23 16:42:02', '2025-09-23 16:42:02'),
 (19, 'TCK-1001', 'student', NULL, NULL, 1, 'xx', 'xx', NULL, '1', 'Normal', NULL, 'Ali Hassan Hussein Ali', NULL, 1, '2025-09-23 20:05:12', '2025-09-23 20:05:12'),
-(20, 'TCK-1001', 'parent', NULL, NULL, 1, 'disscount', 'Solution Note', NULL, '3', 'Normal', NULL, 'Ali Hassan Hussein Ali', '20201515151', 1, '2025-09-23 20:06:29', '2025-09-23 20:06:29');
+(20, 'TCK-1001', 'parent', NULL, NULL, 1, 'disscount', 'Solution Note', NULL, '3', 'Normal', NULL, 'Ali Hassan Hussein Ali', '20201515151', 1, '2025-09-23 20:06:29', '2025-09-23 20:06:29'),
+(21, 'Q9H-B3P-BQV4', 'student', NULL, NULL, 1, 'تخفيض', 'تمت المعالجة', NULL, '1', 'High', NULL, 'Yousif Osama Abd Elsamie Yassin', NULL, 1, '2025-09-24 10:53:25', '2025-09-24 10:53:25'),
+(22, 'HSZ-R1A-GN9R', 'student', NULL, NULL, 1, 'Issue', 'TCK-1001', NULL, '2', 'High', NULL, 'Yousif Osama Abd Elsamie Yassin', NULL, 1, '2025-09-24 10:55:18', '2025-09-24 10:55:18'),
+(23, 'N2R-NJ3-95JV', 'parent', NULL, NULL, 1, 'discount', 'done', NULL, '1', 'High', NULL, 'Yousif Osama Abd Elsamie Yassin', '0999', 1, '2025-09-24 10:56:17', '2025-09-24 10:56:17'),
+(24, 'Q9H-B3P-BQV4', 'parent', NULL, NULL, 1, 'تقسيط', 'تم', NULL, '2', 'High', NULL, 'ANAS Yousif Osama Abd Elsamie Yassin', '20201515151', 1, '2025-09-24 10:57:22', '2025-09-24 10:57:22');
 
 --
 -- Indexes for dumped tables
@@ -770,7 +774,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `voice_calls`
 --
 ALTER TABLE `voice_calls`
-  MODIFY `call_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `call_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- Constraints for dumped tables

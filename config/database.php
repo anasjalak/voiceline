@@ -55,13 +55,11 @@ return [
 
         'mysql_sis2' => [
     'driver' => 'mysql',
-    'host'=>'127.0.0.1',
-    //'host' => '192.168.1.231',
-
-    'port' => '3306',
-    'database' => 'SIS',
-    'username' => 'root', 
-    'password' => '', //
+    'host' => env('DB_SIS2_HOST', '127.0.0.1'),
+    'port' => env('DB_SIS2_PORT', '3306'),
+    'database' => env('DB_SIS2_DATABASE', 'sis2'),
+    'username' => env('DB_SIS2_USERNAME', 'root'),
+    'password' => env('DB_SIS2_PASSWORD', ''),
     'charset' => 'utf8mb4',
     'collation' => 'utf8mb4_unicode_ci',
     'prefix' => '',
@@ -69,21 +67,20 @@ return [
     'engine' => null,
 ],
 
-///
-
-        'mysql_Hdesk' => [
+'mysql_Hdesk' => [
     'driver' => 'mysql',
-    'host'=>'127.0.0.1',
-    'port' => '3306',
-    'database' => 'sis',
-    'username' => 'root', // غيرها حسب الحاجة
-    'password' => '', // غيرها حسب الحاجة
+    'host' => env('DB_HDESK_HOST', '127.0.0.1'),
+    'port' => env('DB_HDESK_PORT', '3306'),
+    'database' => env('DB_HDESK_DATABASE', 'hesk'),
+    'username' => env('DB_HDESK_USERNAME', 'root'),
+    'password' => env('DB_HDESK_PASSWORD', ''),
     'charset' => 'utf8mb4',
     'collation' => 'utf8mb4_unicode_ci',
     'prefix' => '',
     'strict' => true,
     'engine' => null,
 ],
+
         
 ///
 

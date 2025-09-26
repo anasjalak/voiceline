@@ -174,37 +174,92 @@ public function getStudent($id)
         }
 
         // استرجاع بيانات الطالب
-        $student = DB::connection('mysql_sis2')->table('student_profile_e as sp')
-            ->join('student_profile_common as SPC', 'SPC.stud_id', '=', 'sp.stud_id')
-            ->join('faculty as F', 'F.faculty_code', '=', 'SPC.faculty_code')
-            ->join('major as M', function($join) {
-                $join->on('M.major_code', '=', 'SPC.major_code')
-                     ->on('M.faculty_code', '=', 'F.faculty_code');
-            })
-            ->where('sp.stud_id', $id)
-            ->select([
-                DB::raw("CASE 
-                            WHEN SPC.status_code = 1 THEN 'Active'
-                            WHEN SPC.status_code = 0 THEN 'Not Active'
-                            ELSE 'No Data'
-                        END as status_code"),
-                'M.abbreviation as major_code',
-                'F.abbreviation as faculty_code',
-                'sp.stud_id',
-                'sp.stud_name',
-                'sp.stud_surname',
-                'sp.familyname',
-                'sp.lastName',
-                'SPC.batch',
-                'SPC.curr_sem',
-            ])
-            ->first();
+       $student = DB::connection('mysql_sis2')->table('student_profile_e as sp')
+    ->join('student_profile_common as SPC', 'SPC.stud_id', '=', 'sp.stud_id')
+    ->join('faculty as F', 'F.faculty_code', '=', 'SPC.faculty_code')
+    ->join('major as M', function($join) {
+        $join->on('M.major_code', '=', 'SPC.major_code')
+             ->on('M.faculty_code', '=', 'F.faculty_code');
+    })
+    // نضيف آخر نتيجة أكاديمية
+    ->leftJoin(DB::raw('(SELECT st.stud_id, st.semester, st.cgpa_status_code, st.CGPA, cs.status_desc_e as status
+                         FROM stud_transcript_table st
+                         JOIN cgpa_status cs ON st.cgpa_status_code = cs.cgpa_status_code
+                         WHERE st.semester = (
+                             SELECT MAX(semester) 
+                             FROM stud_transcript_table 
+                             WHERE stud_id = st.stud_id
+                         )
+                        ) as lastResult'), 'lastResult.stud_id', '=', 'sp.stud_id')
+    ->where('sp.stud_id', $id)
+    ->select([
+        DB::raw("CASE 
+                    WHEN SPC.status_code = 1 THEN 'Active'
+                    WHEN SPC.status_code = 0 THEN 'Not Active'
+                    ELSE 'No Data'
+                END as status_code"),
+        'M.abbreviation as major_code',
+        'F.abbreviation as faculty_code',
+        'sp.stud_id',
+        'sp.stud_name',
+        'sp.stud_surname',
+        'sp.familyname',
+        'sp.lastName',
+        'SPC.batch',
+        'SPC.curr_sem',
+        // الحقول الجديدة من آخر نتيجة
+        'lastResult.semester as last_semester',
+        'lastResult.CGPA as last_cgpa',
+        'lastResult.status as last_status'
+    ])
+    ->first();
 
-             $lastResult = DB::connection('mysql_sis2')->table('results')
-                    ->where('stud_id', $student->stud_id)
-                    ->orderByDesc('semester')
-                    ->select('semester', 'status', 'CGPA')
-                    ->first();
+$clearance = DB::connection('mysql_sis2')
+    ->table('stud_course_mark as t')
+    ->join('course_desc as c', 't.course_code', '=', 'c.course_code') // join مع course_desc
+    ->join('student_profile_common as spc', function($join) {
+        $join->on('t.stud_id', '=', 'spc.stud_id')
+             ->on('t.batch', '=', 'spc.batch'); // 👈 إضافة شرط batch
+    })
+    ->where('t.stud_id', $student->stud_id)
+    ->whereIn('t.grade', ['F', 'Z', 'I'])
+    ->orderBy('t.stud_id')
+    ->orderBy('t.semester')
+    ->select(
+        't.stud_id',
+        'spc.batch',          // batch من student_profile_common
+        't.course_code',
+        'c.course_name',      // اسم الكورس من course_desc
+        't.semester',
+        DB::raw("CONCAT(
+            t.grade,
+            CASE WHEN t.sub_grade1 IS NOT NULL AND t.sub_grade1 <> '' 
+                 THEN CONCAT('/', t.sub_grade1) ELSE '' END,
+            CASE WHEN t.sub_grade2 IS NOT NULL AND t.sub_grade2 <> '' 
+                 THEN CONCAT('/', t.sub_grade2) ELSE '' END
+        ) as clearance_grade"),
+        't.remark'
+    )
+    ->get();
+
+
+
+
+
+
+
+             $lastResult = DB::connection('mysql_sis2')
+    ->table('stud_transcript_table as st')
+    ->join('cgpa_status as cs', 'st.cgpa_status_code', '=', 'cs.cgpa_status_code')
+    ->where('st.stud_id', $student->stud_id)
+    ->orderByDesc('st.semester')
+    ->select(
+        'st.semester',
+        'st.cgpa_status_code',
+        'st.CGPA',
+        'cs.status_desc_e as status'
+    )
+    ->first();
         // تسجيل الاستعلام للتصحيح
         \Log::info('Student query executed for ID: ' . $id);
         \Log::info('Student data: ' . json_encode($student));
@@ -275,8 +330,10 @@ public function getStudent($id)
                 'semester' => $lastResult->semester ?? null,
                 'status'   => $lastResult->status ?? 'No Data',
                 'last_cgpa'     => $lastResult->CGPA ?? null,
+
             ],
-            'tickets' => $tickets
+            'tickets' => $tickets,
+            'clearance'=>$clearance
           
         ]);
 
@@ -294,21 +351,34 @@ public function getTicket($trackid)
 {
     try {
 
- $ticket =  DB::connection('mysql_Hdesk')->table('hesk_tickets')
-            ->where('trackid', $trackid)
-             ->select('trackid', 'subject', 'status as status_code', DB::raw("CASE 
-                    WHEN priority = 1 THEN 'Normal'
-                    WHEN priority = 2 THEN 'Middle' 
-                    WHEN priority = 3 THEN 'High'
-                    WHEN priority = 4 THEN 'Critical'
-                    ELSE 'Unknown'
-                END as priority"),'priority as priority_code', DB::raw("CASE 
-                    WHEN status = 1 THEN 'CUSTOMER REPLIED'
-                    WHEN status = 2 THEN 'STAFF REPLIED' 
-                    WHEN status = 3 THEN 'RESOLVED'
-                    WHEN status = 4 THEN 'IN PROGRESS'
-                    ELSE 'Unknown'
-                END as foundStatus"))->first() ;
+ $ticket = DB::connection('mysql_Hdesk')
+    ->table('hesk_tickets as t')
+    ->leftJoin('hesk_users as u', 't.owner', '=', 'u.id')
+    ->where('t.trackid', $trackid)
+    ->select(
+        't.trackid',
+        't.subject',
+        't.status as status_code',
+        't.priority as priority_code',
+        't.owner',
+        DB::raw("COALESCE(u.name, 'Unassigned') as owner_name"),
+        DB::raw("CASE 
+            WHEN t.priority = 1 THEN 'Normal'
+            WHEN t.priority = 2 THEN 'Middle' 
+            WHEN t.priority = 3 THEN 'High'
+            WHEN t.priority = 4 THEN 'Critical'
+            ELSE 'Unknown'
+        END as priority"),
+        DB::raw("CASE 
+            WHEN t.status = 1 THEN 'CUSTOMER REPLIED'
+            WHEN t.status = 2 THEN 'STAFF REPLIED' 
+            WHEN t.status = 3 THEN 'RESOLVED'
+            WHEN t.status = 4 THEN 'IN PROGRESS'
+            ELSE 'Unknown'
+        END as foundStatus")
+    )
+    ->first();
+
 
    /*     $ticket = DB::connection('mysql_Hdesk')
             ->table('hesk_tickets')
