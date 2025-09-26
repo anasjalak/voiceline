@@ -2,14 +2,16 @@
 
 use  App\Http\Controllers\{
     StudentController,
-    DashboardRedirectController,
+    DashboardRedirectController,TicketController,
     AdminDashboardController,
     SupervisorDashboardController,ProfileController,
-    UserDashboardController,
+    UserDashboardController,CallController,ReportController,
     AuthenticatedSessionController
 };
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
- 
+ use Illuminate\Support\Facades\Log;
+
 
 Route::get('/', function () {
     return view('auth.login');
@@ -49,8 +51,115 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware('role:user')
         ->name('user.dashboard');
 });
+// student section
  Route::get('/student', function () {
     return view('student');
 })->name('student');
 
+Route::post('/student-view', [StudentController::class, 'studentView'])->name('studentview');
 
+// routes/web.php
+
+
+Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+
+Route::post('/student/insert', [StudentController::class, 'insert'])->name('student.insert');
+
+// go get std info from controller 
+Route::get('/get-student/{id}', [StudentController::class, 'getStudent']);
+Route::get('/search-ticket/{trackid}', [StudentController::class, 'getTicket']);
+
+
+Route::get('/studentview/{stud_id}', [StudentController::class, 'getStudentData']);
+ 
+
+
+// call section 
+// routes/web.php
+Route::prefix('calls')->group(function() {
+    Route::post('/store', [CallController::class, 'store'])->name('calls.store');
+    Route::get('/search-student', [CallController::class, 'searchStudent'])->name('calls.searchStudent');
+     Route::get('/search-ticket', [CallController::class, 'searchTicket'])->name('calls.searchTicket');
+  
+});
+
+Route::get('/calls/search', [CallController::class, 'search'])->name('calls.search');
+Route::get('/calls/create', function () {
+    return view('calls.create');
+})->name('calls.create');
+
+/// for tickets
+Route::get('/ticket/view', [TicketController::class, 'view'])->name('ticket.view');
+
+Route::get('/search-ticket/{ticketId}', [TicketController::class, 'search'])->name('ticket.search');
+// for Voice Call submit
+  Route::post('/voice-calls/store', [CallController::class, 'store'])
+    ->name('voicecalls.store')
+    ->middleware('auth');  
+    
+   
+Route::get('/test-db/{conn}', function($conn) {
+    // قائمة الاتصالات المسموح بها - عدلها حسب ما عندك في config/database.php
+    $allowed = ['mysql', 'mysql_sis2', 'mysql_Hdesk'];
+
+    if (!in_array($conn, $allowed)) {
+        return response()->json(['success' => false, 'message' => 'Invalid connection name'], 400);
+    }
+
+    try {
+        // استعلام بسيط للتحقق
+        $result = DB::connection($conn)->select('SELECT NOW() as now');
+        
+        return response()->json([
+            'success' => true,
+            'connection' => $conn,
+            'server_time' => $result[0]->now ?? null
+        ]);
+    } catch (\Exception $e) {
+        // سجل الخطأ في اللّوجز لتحليل لاحق
+        Log::error("DB test failed [$conn]: " . $e->getMessage());
+
+        return response()->json([
+            'success' => false,
+            'connection' => $conn,
+            'error' => $e->getMessage()
+        ], 500);
+    }
+});
+
+Route::get('/report-data', [ReportController::class, 'getReportData']);
+Route::view('/reports', 'reports.index');
+
+/* 
+// Dashboard page (returns blade)
+Route::get('/dashboard', function () {
+    return view('reports.dashboard'); // loads dashboard.blade.php
+});
+Route::get('/dashboard', [ReportController::class, 'callsPerUser'])->name('dashboard');
+// API endpoint (returns JSON)
+Route::get('/reports/calls-per-user', [ReportController::class, 'callsPerUser']);
+//for test
+Route::get('/dashboard', [ReportController::class, 'index'])->name('reports.dashboard');
+Route::get('/dashboard/data', [ReportController::class, 'dashboardData'])->name('reports.dashboard.data');
+*/
+
+// عشان  Dashboard
+//Route::get('/report', [ReportController::class, 'index'])->name('dashboard');
+
+// جلب البيانات عشان Dashboard (AJAX)
+Route::get('/report/data', [ReportController::class, 'dashboardData'])->name('dashboard.data');
+
+// عشان تقرير المكالمات لكل مستخدم
+Route::get('/reports/calls-per-user', [ReportController::class, 'callsPerUser'])->name('reports.calls_per_user');
+
+// تقرير الفئات عشان
+Route::get('/reports/data', [ReportController::class, 'getReportData'])->name('reports.dashboard.data');
+
+// بيانات الأداء >> عشان تجيب لي 
+Route::get('/reports/dashboard-data', [ReportController::class, 'getDashboardData'])->name('reports.dashboard_data');
+
+Route::get('/log-url', function (\Illuminate\Http\Request $request) {
+    \Log::info("Dashboard URL: " . $request->query('url'));
+    return response()->json(['status' => 'logged']);
+})->name('log.url');
