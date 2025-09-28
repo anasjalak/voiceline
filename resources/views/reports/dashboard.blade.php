@@ -79,13 +79,19 @@
         </div>
         <div class="col-md-4">
           <canvas id="receivedChart"></canvas>
-          <p>Completed Calls</p>
+          <p>Submitted</p>
         </div>
         <div class="col-md-4">
           <canvas id="solvedChart"></canvas>
-          <p>In_Progress Calls</p>
+          <p>Escalated</p>
         </div>
+        
+            <div class="col-md-4">
+      <canvas id="resolvedChart"></canvas>
+      <p>Resolved</p>
+    </div>
       </div>
+     
     </div>
 
     <!-- Table -->
@@ -94,13 +100,10 @@
         <tr>
           <th>User</th>
           <th>Received Calls</th>
-          <th>Scheduled</th>
-          <th>Completed</th>
-          <th>Processing</th>
-          <th>In Progress</th>
-          <th>Waiting Approval</th>
-          <th>Under Review</th>
-          <th>No Data</th>
+          <th>Resolved</th>
+          <th>Submitted</th>
+          <th>Escalated</th>
+ 
          
         </tr>
       </thead>
@@ -109,13 +112,10 @@
         <tr>
           <td>{{ $row->name }}</td>
           <td>{{ $row->Received_Calls }}</td>
-          <td>{{ $row->Scheduled }}</td>
-          <td>{{ $row->Completed }}</td>
-          <td>{{ $row->Processing }}</td>
-          <td>{{ $row->In_Progress }}</td>
-          <td>{{ $row->Waiting_Approval }}</td>
-          <td>{{ $row->Under_Review }}</td>
-          <td>{{ $row->No_data }}</td>
+          <td>{{ $row->Resolved }}</td>
+                    <td>{{ $row->Submitted }}</td>
+                    <td>{{ $row->Escalated }}</td>
+       
            
         </tr>
         @endforeach
@@ -132,7 +132,7 @@
       const ctxAll = document.getElementById('circleChart').getContext('2d');
       const ctxReceived = document.getElementById('receivedChart').getContext('2d');
       const ctxSolved = document.getElementById('solvedChart').getContext('2d');
-
+   const ctxResolved = document.getElementById('resolvedChart').getContext('2d');
       const colors = ["#FF6384","#36A2EB","#FFCE56","#4BC0C0","#9966FF","#FF9F40"];
 
       const chartOptions = {
@@ -152,13 +152,13 @@
         }
       };
 
-      let chartAll, chartCompleted, chartScheduled;
+      let chartAll, chartCompleted, chartResolved,chartScheduled;
 
       function renderCharts(users) {
         if (chartAll) chartAll.destroy();
         if (chartCompleted) chartCompleted.destroy();
         if (chartScheduled) chartScheduled.destroy();
-
+ if (chartResolved) chartResolved.destroy();
         chartAll = new Chart(ctxAll, {
           type: 'doughnut',
           data: {
@@ -177,7 +177,7 @@
           data: {
             labels: users.map(u => u.name),
             datasets: [{
-              data: users.map(u => parseInt(u.Completed)),
+              data: users.map(u => parseInt(u.Submitted)),
               backgroundColor: colors
             }]
           },
@@ -190,13 +190,25 @@
           data: {
             labels: users.map(u => u.name),
             datasets: [{
-              data: users.map(u => parseInt(u.In_Progress)),
+              data: users.map(u => parseInt(u.Escalated)),
               backgroundColor: colors
             }]
           },
           options: chartOptions,
           plugins: [ChartDataLabels]
         });
+        chartResolved = new Chart(ctxResolved, {
+    type: 'doughnut',
+    data: {
+      labels: users.map(u => u.name),
+      datasets: [{
+        data: users.map(u => parseInt(u.Resolved)),
+        backgroundColor: colors
+      }]
+    },
+    options: chartOptions,
+    plugins: [ChartDataLabels]
+  });
       }
 
       function loadReport() {
@@ -220,13 +232,12 @@
                 <tr>
                   <td>${row.name}</td>
                   <td>${row.Received_Calls}</td>
-                  <td>${row.Scheduled}</td>
-                  <td>${row.Completed}</td>
-                  <td>${row.Processing}</td>
-                  <td>${row.In_Progress}</td>
-                  <td>${row.Waiting_Approval}</td>
-                  <td>${row.Under_Review}</td>
-                  <td>${row.No_data}</td>
+                   <td>${row.Resolved}</td>
+                  <td>${row.Submitted}</td>
+                  <td>${row.Escalated}</td>
+                  
+               
+        
                
                 </tr>`;
             });
