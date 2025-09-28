@@ -163,3 +163,9 @@ Route::get('/log-url', function (\Illuminate\Http\Request $request) {
     \Log::info("Dashboard URL: " . $request->query('url'));
     return response()->json(['status' => 'logged']);
 })->name('log.url');
+
+
+//dyn rep
+// routes/web.php
+Route::get('/reports/voice-calls', [ReportController::class, 'voiceCallsReport'])->name('reports.voicecalls');
+Route::post('/reports/voice-calls/search', [ReportController::class, 'search'])->name('reports.voicecalls.search');

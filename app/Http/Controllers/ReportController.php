@@ -132,18 +132,20 @@ class ReportController extends Controller
             ->select(
                 'u.name',
                 DB::raw('COUNT(*) AS Received_Calls'),
-                DB::raw("SUM(CASE WHEN v.Final_Status = 'Scheduled' THEN 1 ELSE 0 END) AS Scheduled"),
-                DB::raw("SUM(CASE WHEN v.Final_Status = 'Completed' THEN 1 ELSE 0 END) AS Completed"),
-                DB::raw("SUM(CASE WHEN v.Final_Status = 'Processing' THEN 1 ELSE 0 END) AS Processing"),
-                DB::raw("SUM(CASE WHEN v.Final_Status = 'In Progress' THEN 1 ELSE 0 END) AS In_Progress"),
+                DB::raw("SUM(CASE WHEN v.Final_Status = 'Resolved' THEN 1 ELSE 0 END) AS Resolved"),
+                DB::raw("SUM(CASE WHEN v.Final_Status = 'Escalated' THEN 1 ELSE 0 END) AS Escalated"),
+                DB::raw("SUM(CASE WHEN v.Final_Status = 'Submitted' THEN 1 ELSE 0 END) AS Submitted"),
+              /*  DB::raw("SUM(CASE WHEN v.Final_Status = 'In Progress' THEN 1 ELSE 0 END) AS In_Progress"),
                 DB::raw("SUM(CASE WHEN v.Final_Status = 'Waiting Approval' THEN 1 ELSE 0 END) AS Waiting_Approval"),
                 DB::raw("SUM(CASE WHEN v.Final_Status = 'Under Review' THEN 1 ELSE 0 END) AS Under_Review"),
-                DB::raw("SUM(CASE WHEN v.Final_Status IS NULL THEN 1 ELSE 0 END) AS No_data"),
-                DB::raw("SUM(CASE WHEN v.priority IS NOT NULL AND v.created_at <> v.updated_at THEN 1 ELSE 0 END) AS Priority_Changed")
+                */ DB::raw("SUM(CASE WHEN v.Final_Status IS NULL THEN 1 ELSE 0 END) AS No_data"),
+                DB::raw("SUM(CASE WHEN v.priority IS NOT NULL AND v.created_at <> v.updated_at THEN 1 ELSE 0 END
+                ) AS Priority_Changed")
+           
             )
             ->groupBy('v.handled_by_user_id', 'u.name')
             ->get();
-//dd($report);
+ //dd($report);
         // تمرير المتغير للـ view
         return view('reports.dashboard', compact('report'));
     }
@@ -154,16 +156,16 @@ class ReportController extends Controller
         ->join('users as u', 'u.id', '=', 'v.handled_by_user_id')
         ->select(
             'u.name',
-            DB::raw('COUNT(*) as Received_Calls'),
-            DB::raw("SUM(CASE WHEN v.Final_Status = 'Scheduled' THEN 1 ELSE 0 END) as Scheduled"),
-            DB::raw("SUM(CASE WHEN v.Final_Status = 'Completed' THEN 1 ELSE 0 END) as Completed"),
-            DB::raw("SUM(CASE WHEN v.Final_Status = 'Processing' THEN 1 ELSE 0 END) as Processing"),
-            DB::raw("SUM(CASE WHEN v.Final_Status = 'In Progress' THEN 1 ELSE 0 END) as In_Progress"),
-            DB::raw("SUM(CASE WHEN v.Final_Status = 'Waiting Approval' THEN 1 ELSE 0 END) as Waiting_Approval"),
-            DB::raw("SUM(CASE WHEN v.Final_Status = 'Under Review' THEN 1 ELSE 0 END) as Under_Review"),
-            DB::raw("SUM(CASE WHEN v.Final_Status IS NULL THEN 1 ELSE 0 END) as No_data"),
-            DB::raw("SUM(CASE WHEN v.Final_Status IS NOT NULL AND v.created_at <> v.updated_at THEN 1 ELSE 0 END) as Priority_Changed")
-        );
+            DB::raw('COUNT(*) AS Received_Calls'),
+                DB::raw("SUM(CASE WHEN v.Final_Status = 'Resolved' THEN 1 ELSE 0 END) AS Resolved"),
+                DB::raw("SUM(CASE WHEN v.Final_Status = 'Escalated' THEN 1 ELSE 0 END) AS Escalated"),
+                DB::raw("SUM(CASE WHEN v.Final_Status = 'Submitted' THEN 1 ELSE 0 END) AS Submitted"),
+              /*  DB::raw("SUM(CASE WHEN v.Final_Status = 'In Progress' THEN 1 ELSE 0 END) AS In_Progress"),
+                DB::raw("SUM(CASE WHEN v.Final_Status = 'Waiting Approval' THEN 1 ELSE 0 END) AS Waiting_Approval"),
+                DB::raw("SUM(CASE WHEN v.Final_Status = 'Under Review' THEN 1 ELSE 0 END) AS Under_Review"),
+                */ DB::raw("SUM(CASE WHEN v.Final_Status IS NULL THEN 1 ELSE 0 END) AS No_data"),
+                DB::raw("SUM(CASE WHEN v.priority IS NOT NULL AND v.created_at <> v.updated_at THEN 1 ELSE 0 END
+                ) AS Priority_Changed"));
 
     if ($request->period == 'week') {
         $query->where('v.created_at', '>=', now()->startOfWeek());
@@ -182,5 +184,37 @@ class ReportController extends Controller
 
     return response()->json($report);
 }
+public function search(Request $request)
+    {
+        $query = VoiceCall::query();
 
+        // البحث بالفترة الزمنية
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('created_at', [
+                $request->start_date . ' 00:00:00',
+                $request->end_date . ' 23:59:59'
+            ]);
+        }
+
+        // البحث الديناميكي على كل الحقول
+        $searchableFields = [
+            'call_id', 'ticket_number', 'customer_type', 'stud_id', 'staff_ID',
+            'category', 'issue', 'Solution_Note', 'Found_Status', 'Final_Status',
+            'priority', 'parent_id', 'parent_name', 'parent_phone', 'handled_by_user_id'
+        ];
+
+        foreach ($searchableFields as $field) {
+            if ($request->filled($field)) {
+                $query->where($field, 'like', '%' . $request->$field . '%');
+            }
+        }
+
+        $results = $query->get();
+
+        return response()->json($results);
+    }
+    public function voiceCallsReport()
+{
+    return view('reports.report');
+}
 }
