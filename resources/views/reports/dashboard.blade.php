@@ -9,8 +9,8 @@
    
   <div class="reports-container mt-4">
     <ul>
-      <li><a href="/reports">📦 تقرير الأصناف</a></li>
-      <li><a href="/reports/calls-per-user" class="active">👤 تقرير المستخدمين</a></li>
+     <li><a href="/reports" > General Report </a></li>
+      <li><a href="/reports/calls-per-user"class="active">Detailed Report</a></li>
     </ul>
 
     <h5>Calls Per Users Report:</h5>

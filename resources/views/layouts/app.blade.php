@@ -173,7 +173,7 @@
       });
     });
   </script>
-  
+
   @stack('scripts') <!-- Optional page-specific scripts -->
 </body>
 

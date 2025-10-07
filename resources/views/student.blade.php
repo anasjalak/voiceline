@@ -1,72 +1,12 @@
-
 @extends('layouts.app')
   
 @section('title', 'Call Page')
- 
+
 @section('content')
-  <style>
-    /* إضافة ستايل للتبويبات */
-    .radio-group {
-      position: relative;
-      display: flex;
-      background: #f0f0f0;
-      border-radius: 30px;
-      padding: 5px;
-      width: 100%;
-      max-width: 500px;
-    }
 
-    .radio-group label {
-      flex: 1;
-      text-align: center;
-      padding: 10px 15px;
-      cursor: pointer;
-      border-radius: 30px;
-      z-index: 2;
-      transition: all 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
 
-    .radio-group label.active {
-      color: #fff;
-    }
 
-    .radio-group .slider {
-      position: absolute;
-      top: 5px;
-      left: 0;
-      border-radius: 30px;
-      background: #EC8305;
-      transition: all 0.3s ease;
-      z-index: 1;
-    }
-
-    .tabicon {
-      width: 24px;
-      height: 24px;
-      margin-bottom: 5px;
-    }
-
-    .flex {
-      display: flex;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-
-    .flex .field {
-      flex: 1;
-    }
-    .form-control {
-  background-color:rgba(211, 211, 211, 0.3) ; 
-}
-
-  </style>
-</head>
-<body>
-
-<form action="{{ route('voicecalls.store') }}" method="POST" >
+<form action="{{ route('voicecalls.store') }}" method="POST">
     @csrf
     <!-- Radios -->
    @if(session('success'))
@@ -77,12 +17,12 @@
 
 
     <div class="field caller-tabs" 
-         style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; margin-bottom: 80px;margin-top:-10vh;">
+         style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; margin-bottom: 80px;">
 
       <div class="radio-group">
         <div class="slider"></div>
 
-        <input type="radio"   name="customer_type" id="caller-student" value="student" hidden checked>
+        <input type="radio"   name="customer_type" id="caller-student" value="student" hidden checked >
         <label for="caller-student">
           <span>Student</span>
           <img src="assets/student.png" alt="student" class="tabicon">
@@ -107,28 +47,25 @@
         </label>
       </div>
     </div>
-<div class="call-info" style="margin-top:-15vh;">
-
-
+<div  calss="call-form" style="margin-top:-10vh;">
     <!-- Always visible -->
     <div class="field" id="index-field" style="display: flex; flex-direction: row; gap: 20px;">
       <div style="flex: 1 1 25%;">
-       <div class="label" >Student Index #:</div>
+        <div class="label">Index</div>
         <input type="text" id="indexInput" name="stud_index" style="width: 100%;">
-      <!-- <div style="flex: 1 1 25%;">
+      <div style="flex: 1 1 25%; display:none;">
         <div class="label">Get Ticket #</div>
         <input type="text" id="ticketno" style="width: 100%;"> 
-      </div> -->
+      </div>
       
-        <div style="flex: 1 1 25%;">
-      
+        <div style="flex: 1 1 25%; margin-top:20px; display:none;">
+        <div class="label" >Student Index #:</div>
         <div class="label" id="stud_id" name ="stud_id"></div>
-        <input type="hidden" name="stdindexno" id="stdindexno">
+        <input type="hidden" name="stdindexno" id="stdindexno" >
       </div>
       </div>
       <div style="flex: 1 1 25%;">
-          <button type="button" data-bs-target="#StatusModal" data-bs-toggle="modal" id="btngetstdrecord" 
-          style="padding: 8px; border: none; background: #EC8305; color: #fff; border-radius: 6px; cursor: pointer; margin-top: 25px; " >
+          <button type="button" data-bs-target="#StatusModal" data-bs-toggle="modal" id="btngetstdrecord"  class="view-btn">
           View Status
         </button>
         
@@ -136,23 +73,40 @@
       
       </div>
             <div style="flex: 1 1 35%; display:none;">
-        <button type="button" data-bs-target="#StatusModal" data-bs-toggle=" " id="AcademicRecord"  onclick="submitStudentForm()" 
-          style="padding: 8px; border: none; background: #EC8305; color: #fff; border-radius: 6px; cursor: pointer; margin-top: 25px;">
+        <button type="button" data-bs-target="#StatusModal" data-bs-toggle=" " id="AcademicRecord"  onclick="submitStudentForm()" class="view-btn">
           Get Academic Rec.
         </button>
 
       </div>
     </div>
     
+     <div class="field" id="staff-id-field" style="display: flex; flex-direction: row; gap: 10px;">
+           <div class="flex">
+               <div class="field" style="flex: 1 1 30%;">
+               <div class="label">Staff ID</div>
+                <input type="text" id="id" name="staff_id">
+              </div>
+
+              <div class="field" style="flex: 1 1 30%;">
+                 <button type="button" data-bs-target="#StaffModal" data-bs-toggle="modal" id=""  class="view-btn" style="width:30%;">
+                  Get Info
+                  </button>
+        
+              </div>
+               
+           </div>
+            
+        </div>
+
     <div class="flex">
       <div class="field" id="name-field">
         <div class="label">Name</div>
-        <input type="text" id="name" name="caller_Name">
+        <input type="text" id="name" name="caller_Name" class ="form-control"readonly>
       </div>
-      <div class="field" id="id-field">
+      <!-- <div class="field" id="id-field">
         <div class="label">Staff ID</div>
         <input type="text" id="id" name="staff_id">
-      </div>
+      </div> -->
       <div class="field" id="parent-field">
         <div class="label">Phone</div>
         <input type="text" id="phone" name="phone">
@@ -163,17 +117,17 @@
     <div class="flex">
       <div class="field" id="faculty-field">
         <div class="label">Faculty</div>
-        <input type="text" id="facultyInput"class="form-control"  readonly>
+        <input type="text" id="facultyInput"  class ="form-control"readonly>
       </div>
 
       <div class="field" id="batch-field">
         <div class="label">Batch</div>
-        <input type="text" id="batchInput" class="form-control"  readonly>
+        <input type="text" id="batchInput"  class ="form-control"readonly>
       </div>
 
       <div class="field" id="major-field">
         <div class="label">Major</div>
-        <input type="text" id="majorInput"class="form-control"  readonly>
+        <input type="text" id="majorInput"  class ="form-control"readonly>
       </div>
     </div>
    
@@ -213,47 +167,35 @@
       </select>
     </div>
 <div id="ticket-fields-group">
-<div class="flex">
+    <div class="flex">
       <div class="field">
         <div class="label">Ticket Number</div>
-        <input type="text" id="ticketNumber" name="ticket_number" class="form-control"  readonly>
+        <input type="text" id="ticketNumber" name="ticket_number"  class ="form-control"readonly>
       </div>
 
       <div class="field">
         <div class="label">Ticket URL</div>
-        <!-- <input type="text" id="ticketURL" name="ticket_url"> -->
-        <a href="#" target="_blank" class="btn btn-link" id="ticketURL" name="ticket_url">
-  Open Link
-</a>
+        <input type="text" id="ticketURL" name="ticket_url" class ="form-control"readonly>
       </div>
- <!-- <div class="field">
-        <div class="label">Ticket URL</div>
-<a href="https://hdesk.fu.edu.sd/ticket.php?track=WMP-57W-5Q8W&e=ahmedosaldab.1234%40gmail.com" target="_blank" class="btn btn-link">
-  Open Link
-</a>
-      
-      </div> -->
+
       <div class="field">
         <div class="label">Found Status</div>
-        <input type="text" id="foundStatus" name="foundStatus" class="form-control"  readonly>
+        <input type="text" id="foundStatus" name="foundStatus" class ="form-control"readonly>
       </div>
     </div>
     
     <div class="flex">
       <div class="field">
         <div class="label">Priority</div>
-        <input type="text" id="priority" name="priority" class="form-control"  readonly>
+        <input type="text" id="priority" name="priority"  class ="form-control"readonly>
       </div>
 
       <div class="field">
         <div class="label">Assigned To</div>
-        <input type="text" id="assignedTo" name="assignedTo" class="form-control"  readonly>
+        <input type="text" id="assignedTo" name="assignedTo"  class ="form-control"readonly>
       </div>
     </div>
-    
-</div>
-
-    
+</div>  
     <div class="field">
       <div class="label">Final Status</div>
       <select id="finalStatus" name="Final_Status">
@@ -269,19 +211,56 @@
       <textarea id="solutionNote" name="Solution_Note" rows="5"></textarea>
     </div>
 
-   <div class="btn" style="width: 100%; margin: 0 auto;">
-    <button type="submit">Submit Call</button>
+    <div class="btn">
+      <button type="submit" class="submit-btn">Submit</button>
+    </div>
+    </div>
+  </form>
+  <!---------------------------------------------------staff Modal -->
+  <div class="modal fade" id="StaffModal" tabindex="-1" aria-labelledby="StaffModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="StaffModalLabel" style="color: #EC8305;">Staff Info</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="padding: 20px;">
+                <p><b>Staff Name:</b> <span id="staffName">N/A</span></p>
+                <div class="row mb-2">
+                    <div class="col-12 mb-2">
+                        <p><b>Tickets:</b></p>
+                    </div>
+                    <div class="col-12">
+                        <table class="table table-bordered table-sm align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="color: #EC8305;">Ticket ID</th>
+                                    <th style="color: #EC8305;">Ticket Subject</th>
+                                    <th style="color: #EC8305;">URL</th>
+                                    <th style="color: #EC8305;">Get</th>
+                                    <th style="color: #EC8305;">Remark</th>
+                                </tr>
+                            </thead>
+                            <tbody id="staffTicketsTable">
+                                <tr>
+                                    <td colspan="5" class="text-center">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-  </form>
-</div>
   <!-- Modal -->
 <div class="modal fade" id="StatusModal" tabindex="-1" aria-labelledby="StatusModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="StatusModalLabel" style="color: #EC8305;">Student Status</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" ></button>
       </div>
       <div class="modal-body" style="padding: 20px;">
         <p><b>Name:</b> <span id="studentName">         {{ session('name') }}    </span></p>
@@ -338,10 +317,12 @@
               </table>
             </div>
           </div>
-           
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+    @endsection
+  @push('scripts')
+  <!-- Bootstrap JS -->
+ 
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Toggle Logic in JS -->
   <script>
 
@@ -352,8 +333,9 @@
     batch: document.getElementById("batch-field"),
     major: document.getElementById("major-field"),
     index: document.getElementById("index-field"),
-    id: document.getElementById("id-field"),
-     ticketGroup: document.getElementById("ticket-fields-group") 
+    // id: document.getElementById("id-field"),
+    ticketGroup: document.getElementById("ticket-fields-group"),
+    staffId:document.getElementById("staff-id-field"),
   };
 
   const labels = document.querySelectorAll(".radio-group label");
@@ -373,14 +355,13 @@
   function updateVisibility(role) {
     // Hide all fields first
     Object.values(fields).forEach(f => f.style.display = "none");
-  if (role !== "general") {
-        fields.ticketGroup.style.display = "block"; // Show ticket fields
-    } 
+
     if (role === "student") {
       fields.faculty.style.display = "block";
       fields.batch.style.display = "block";
       fields.major.style.display = "block";
       fields.index.style.display = "flex";
+      fields.ticketGroup.style.display="block";
     } 
     else if (role === "parent") {
       fields.parent.style.display = "block";
@@ -388,13 +369,17 @@
       fields.batch.style.display = "block";
       fields.major.style.display = "block";
       fields.index.style.display = "flex";
+      fields.ticketGroup.style.display="block";
     } 
     else if (role === "staff") {
+      fields.staffId.style.display="block";
       fields.faculty.style.display = "block";
-      fields.id.style.display = "block";
+      // fields.id.style.display = "block";
+        fields.ticketGroup.style.display="block";
     } 
     else if (role === "general") {
       fields.parent.style.display = "block";
+   
     }
 
     // Update active label + move slider
@@ -487,13 +472,15 @@
  
             if (data.tickets && data.tickets.length > 0) {
                 data.tickets.forEach(ticket => {
+                  // added data-bs-dismiss="modal" to get button to close the modal and the backdrop
                     const row = `
+                    
                         <tr>
                             <td>${ticket.trackid || ''}</td>
                             <td>${ticket.subject || ''}</td>
                             <td><a href="https://hdesk.fu.edu.sd/admin/admin_ticket.php?track=${ticket.trackid}" target="_blank" >View</a></td>
-                           <td><a href="javascript:void(0);" onclick="fillTicketForm('${ticket.trackid}')">Get</a></td>
-
+                            
+                           <td><a href="javascript:void(0);" data-bs-dismiss="modal" onclick="fillTicketForm('${ticket.trackid}')">Get</a></td>
                             <td>${ticket.priority || ''}</td>
                         </tr>`;
                     ticketsTable.insertAdjacentHTML('beforeend', row);
@@ -553,9 +540,12 @@ function fillTicketForm(trackid) {
              document.getElementById('foundStatus').value = ticket.foundStatus || '';
             
               
-            let modalEl = document.getElementById('StatusModal');
-            let modal = bootstrap.Modal.getInstance(modalEl);
-            modal.hide();
+          
+let modalEl = document.getElementById('StatusModal');
+let modal = bootstrap.Modal.getInstance(modalEl); // get the one that was opened
+
+modal.hide();
+
         })
        .catch(error => {  
            console.error("Error fetching ticket data:", error);
@@ -601,4 +591,4 @@ function fillTicketForm(trackid) {
         }
     }, 3000);
 </script>
-@endsection
+@endpush
