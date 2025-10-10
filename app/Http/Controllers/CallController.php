@@ -148,37 +148,65 @@ $ticket=null;
         }
     }
 
-        public function store(Request $request)
-    {
+      
+public function store(Request $request)
+{
+    try {
+        // ✅ التحقق من البيانات الأساسية المطلوبة
         $validated = $request->validate([
-     /*       'ticket_number'      => 'nullable|string|max:25',
-            'customer_type'      => 'required|in:student,parent,staff,external',
-            'stud_id'        => 'nullable|integer',
-            'category'           => 'required|integer',
-            'issue'              => 'nullable|string',
-            'Found_Status'       => 'nullable|string|max:50',
-            'Final_Status'       => 'nullable|string|max:50',
-            'priority'           => 'nullable|in:low,medium,high,urgent',
-       */      
-        ]); 
-        $voiceCall = VoiceCall::create([
-        'customer_type'      => $request->input('customer_type'),
-        'stud_id'        => $request->input('stud_id'),
-        'ticket_number'=> $request->input('ticket_number' ?? 'UNKNOWN'),
-        'category'           => $request->input('category'),
-        'issue'        => $request->input('issue'),
-         'Solution_Note'        => $request->input('Solution_Note'),
-        'Found_Status'        => $request->input('Found_Status'),
-        'Final_Status'        => $request->input('Final_Status'),
-        'priority'           => $request->input('priority') ?? 'medium',
-        'handled_by_user_id' => auth()->id(),  
- 
-        'staff_ID'=>$request->input('staff_ID'),
-        'parent_name'=>$request->input('caller_Name' ),
-        'parent_phone'=>$request->input('phone'),
+            'category' => 'required',
+            'issue' => 'required',
+            'priority' => 'required',
+            'stud_id' => 'required',
         ]);
-// dd($request);
-        return redirect()->back()->with('success', 'Voice Call saved successfully!');
+
+        // ✅ إنشاء السجل الجديد في قاعدة البيانات
+        VoiceCall::create([
+            'customer_type'      => $request->input('customer_type', 'student'),
+            'stud_id'            => $request->input('stud_id'),
+            'ticket_number'      => $request->input('ticket_number', 'UNKNOWN'),
+            'category'           => $request->input('category'),
+            'issue'              => $request->input('issue'),
+            'Solution_Note'      => $request->input('Solution_Note'),
+            'Found_Status'       => $request->input('Found_Status'),
+            'Final_Status'       => $request->input('Final_Status'),
+            'priority'           => $request->input('priority', 'medium'),
+            'handled_by_user_id' => auth()->id() ?? 1,
+            'staff_ID'           => $request->input('staff_ID'),
+            'parent_name'        => $request->input('caller_Name'),
+            'parent_phone'       => $request->input('phone'),
+        ]);
+
+        return redirect()->back()->with('success', '✅ تم حفظ البلاغ بنجاح!');
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        // ⚠️ خطأ في التحقق من البيانات
+        Log::warning('⚠️ Validation failed during voice call submission', [
+            'inputs' => $request->all(),
+            'errors' => $e->errors(),
+            'user_id' => auth()->id(),
+        ]);
+
+        // 🔁 يرجع المستخدم للصفحة مع الرسالة والبيانات القديمة
+        return redirect()->back()
+            ->with('error', 'الرجاء التأكد من تعبئة جميع الحقول المطلوبة بشكل صحيح.')
+            ->withErrors($e->errors())
+            ->withInput();
+
+    } catch (\Exception $e) {
+        // ⚙️ أي خطأ آخر (مثل خطأ في قاعدة البيانات)
+        Log::error('❌ Error while saving voice call', [
+            'message' => $e->getMessage(),
+            'inputs' => $request->all(),
+            'trace' => $e->getTraceAsString(),
+            'user_id' => auth()->id(),
+        ]);
+
+        // 🔁 إرجاع المستخدم مع المدخلات السابقة
+        return redirect()->back()
+            ->with('error', 'حدث خطأ أثناء حفظ البلاغ، الرجاء المحاولة لاحقاً.')
+            ->withInput();
     }
- 
+}
+
 }

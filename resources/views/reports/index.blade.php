@@ -80,8 +80,8 @@
 <body>
   <div class="container">
     <ul>
-      <li><a href="/reports">📦 تقرير الأصناف</a></li>
-      <li><a href="/reports/calls-per-user">👤 تقرير المستخدمين</a></li>
+         <li><a href="/reports" class="active"> General Report </a></li>
+      <li><a href="/reports/calls-per-user">Detailed Report</a></li>
     </ul>
 
     <h5>Reports:</h5>
