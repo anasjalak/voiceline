@@ -99,9 +99,8 @@ Route::get('/search-ticket/{ticketId}', [TicketController::class, 'search'])->na
     ->middleware('auth');  
     
    
-Route::get('/test-db/{conn}', function($conn) {
-    // قائمة الاتصالات المسموح بها - عدلها حسب ما عندك في config/database.php
-    $allowed = ['mysql', 'mysql_sis2', 'mysql_Hdesk'];
+Route::get('/checkdb/{conn}', function($conn) {
+     $allowed = ['mysql', 'mysql_sis2', 'mysql_Hdesk'];
 
     if (!in_array($conn, $allowed)) {
         return response()->json(['success' => false, 'message' => 'Invalid connection name'], 400);

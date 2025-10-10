@@ -48,6 +48,7 @@
     <ul style="list-style:none; padding:0;">
   <li><a href="/reports">📦 تقرير الأصناف</a></li>
   <li><a href="/reports/calls-per-user">👤 تقرير المستخدمين</a></li>
+    <li><a href="/reports/voice-calls">👤 تقرير المتصلين</a></li>
 </ul>
   <div class="container mt-4">
     <h5>Calls Per Users Report:</h5>

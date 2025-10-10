@@ -198,7 +198,8 @@ public function search(Request $request)
 
         // البحث الديناميكي على كل الحقول
         $searchableFields = [
-            'call_id', 'ticket_number', 'customer_type', 'stud_id', 'staff_ID',
+            //'call_id', 
+           'ticket_number', 'customer_type', 'stud_id', 'staff_ID',
             'category', 'issue', 'Solution_Note', 'Found_Status', 'Final_Status',
             'priority', 'parent_id', 'parent_name', 'parent_phone', 'handled_by_user_id'
         ];

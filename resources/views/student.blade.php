@@ -86,6 +86,9 @@
         </div>
     @endif
 
+@if(session('error'))
+    <div id="error-message" class="alert alert-danger">{{ session('error') }}</div>
+@endif
 
     <div class="field caller-tabs" 
          style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; margin-bottom: 80px;">
@@ -131,8 +134,8 @@
       
         <div style="flex: 1 1 25%;">
         <div class="label" >Student Index #:</div>
-        <div class="label" id="stud_id" name ="stud_id"></div>
-        <input type="hidden" name="stdindexno" id="stdindexno">
+        
+        <input type="text" name="stud_id" id="stud_id">
       </div>
       </div>
       <div style="flex: 1 1 25%;">
@@ -267,7 +270,7 @@
     </div>
 
     <div class="btn" style="width: 100%;">
-      <button type="submit">Submit Ticket</button>
+      <button type="submit" onclick="return checkStudentIdBeforeSubmit()">Submit Ticket</button>
     </div>
     
   </form>
@@ -281,11 +284,12 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body" style="padding: 20px;">
-        <p><b>Name:</b> <span id="studentName">         {{ session('name') }}    </span></p>
-        <p><b>Major:</b> <span id="studentMajor"> {{ session('name') }}</span></p>
-        <p><b>Batch:</b> <span id="studentBatch"> {{ session('batch') }}</span></p>
-        <p><b>Semester:</b> <span id="studentSemester"> {{ session('semester') }}</span></p>
-        <p><b>Status:</b> <span id="studentStatus"> {{ session('status') }}</span></p>
+        <p><b>Univ. #:</b> <span id="stud_id_display">           </span></p>
+        <p><b>Name:</b> <span id="studentName">           </span></p>
+        <p><b>Major:</b> <span id="studentMajor"> </span></p>
+        <p><b>Batch:</b> <span id="studentBatch"> </span></p>
+        <p><b>Semester:</b> <span id="studentSemester"> </span></p>
+        <p><b>Status:</b> <span id="studentStatus"> </span></p>
         
       <!-- Subjects Table -->
           <div class="row mb-2">
@@ -422,15 +426,14 @@
     const studentId = document.getElementById('indexInput').value;
     const ticketno= document.getElementById('ticketno').value;
     
-    console.log(studentId);
-     console.log(ticketno);
+   
+   
     if ((!studentId || studentId.trim() === "") && ticketno && ticketno.length > 0) {
       // Case 1: studentId is null/empty AND ticketId exists
-      console.log('ticketno');
+   
     get_ticket_records(ticketno);
     } else if (studentId && studentId.trim() !== "") {
       // Case 2: studentId has value
-       
          getStudentRecord(studentId) ;
     } else {
       // Case 3: neither provided
@@ -448,7 +451,9 @@
 
  function getStudentRecord(studentId) {
     console.log("Fetching student data:", `/get-student/${studentId}`);
-                           
+                console.log('studentIdstudentId');
+                          console.log( studentId);
+//let stud_id=studentId;
     fetch(`{{ url('/get-student') }}/${studentId}`)
         .then(response => {
             if (!response.ok) throw new Error('Network response was not ok');
@@ -461,20 +466,23 @@
             }
 
             // ✅ Fill the form fields
-            document.getElementById('stud_id').innerText = data.student.stud_id || '';
-            document.getElementById('stdindexno').value = data.student.stud_id || '';  
+            
+            document.getElementById('stud_id_display').value = data.student.stud_id || '';  
+            document.getElementById('stud_id').value = data.student.stud_id || '';
             document.getElementById('name').value = data.student.name || '';
             document.getElementById('facultyInput').value = data.student.faculty || '';
             document.getElementById('batchInput').value = data.student.batch || '';
             document.getElementById('majorInput').value = data.student.major || '';
-           
+           const studentId = document.getElementById('stud_id_display').value;
             // ✅ Fill the modal content
+            document.getElementById('stud_id_display').textContent = data.student.stud_id || 'N/A';
+            document.getElementById('stud_id').value = data.student.stud_id || '';
             document.getElementById('studentName').textContent = data.student.name || 'N/A';
             document.getElementById('studentMajor').textContent = data.student.major || 'N/A';
             document.getElementById('studentBatch').textContent = data.student.batch || 'N/A';
             document.getElementById('studentSemester').textContent = data.student.semester || 'N/A';
             document.getElementById('studentStatus').textContent = data.student.status || 'N/A';
-
+ 
             // ✅ Clear old tickets
             const ticketsTable = document.getElementById('ticketsTable');
             ticketsTable.innerHTML = "";
@@ -545,12 +553,11 @@ function fillTicketForm(trackid) {
             document.getElementById('priority').value = ticket.priority || '';
             document.getElementById('ticketURL').value = ticket.subject || '';
              document.getElementById('foundStatus').value = ticket.foundStatus || '';
-            
-              
+                          
             let modalEl = document.getElementById('StatusModal');
             let modal = bootstrap.Modal.getInstance(modalEl);
             modal.hide();
-        })
+        })     
        .catch(error => {  
            console.error("Error fetching ticket data:", error);
              alert("حصل خطأ أثناء تحميل بيانات التذكرة: " + error.message);
@@ -565,6 +572,7 @@ function fillTicketForm(trackid) {
 
 <form id="studentForm" action="{{ route('studentview') }}" method="POST" style="display: none;">
     @csrf
+    <input type="hidden" name="stud_id" id="hiddenStud_id">
     <input type="hidden" name="name" id="hiddenName">
     <input type="hidden" name="faculty" id="hiddenFaculty">
     <input type="hidden" name="batch" id="hiddenBatch">
@@ -572,28 +580,48 @@ function fillTicketForm(trackid) {
 </form>
 <script> function submitStudentForm() {
     // Copy values from visible fields to hidden form inputs
+   // document.getElementById('stud_id_display').value = document.getElementById('stud_id').value;
     document.getElementById('hiddenName').value = document.getElementById('name').value;
     document.getElementById('hiddenFaculty').value = document.getElementById('facultyInput').value;
     document.getElementById('hiddenBatch').value = document.getElementById('batchInput').value;
     document.getElementById('hiddenMajor').value = document.getElementById('majorInput').value;
-
+ 
+  //alert(data.message ||  document.getElementById('stud_id').value );
     // Submit the hidden form
     document.getElementById('studentForm').submit();
 } 
 
 
+  // اختفائها رسالة التنبيه بحفظ السجل
+  setTimeout(() => {
+    const messages = document.querySelectorAll('#success-message, #error-message');
+    messages.forEach(msg => {
+        msg.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+        msg.style.opacity = "0";
+        msg.style.transform = "translateY(-20px)";
+        setTimeout(() => msg.remove(), 600); // حذف العنصر بعد الحركة
+    });
+}, 3000);
+
+
+
+function checkStudentIdBeforeSubmit() {
+    // انسخ قيمة indexInput إلى stdindexno (في حال لم تُملأ تلقائيًا)
+    //document.getElementById('stud_id').value = document.getElementById('indexInput').value;
+
+    const studentId =  document.getElementById("stud_id_display").textContent.trim();
+   
+ // alert(studentId);
+
+    if (!studentId || studentId.trim() === "") {
+        alert("Check Student Index");
+        return false; // يمنع إرسال الفورم
+    }
+
+    return true; // يُسمح بالإرسال
+}
 </script>
 
-<script>
-  // اختفائها رسالة التنبيه بحفظ السجل
-    setTimeout(() => {
-        let msg = document.getElementById('success-message');
-        if (msg) {
-            msg.style.transition = "opacity 0.5s ease";
-            msg.style.opacity = "0";
-            setTimeout(() => msg.remove(), 500); // يحذف الرسالة بعد اختفائها
-        }
-    }, 3000);
-</script>
+
 </body>
 </html>
