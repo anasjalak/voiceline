@@ -177,25 +177,22 @@ public function store(Request $request)
             'parent_phone'       => $request->input('phone'),
         ]);
 
-        return redirect()->back()->with('success', '✅ تم حفظ البلاغ بنجاح!');
+        return redirect()->back()->with('success', '✅ Call inforamtion - Saved Success!');
 
     } catch (\Illuminate\Validation\ValidationException $e) {
-        // ⚠️ خطأ في التحقق من البيانات
-        Log::warning('⚠️ Validation failed during voice call submission', [
+         Log::warning('⚠️ Validation failed during voice call submission', [
             'inputs' => $request->all(),
             'errors' => $e->errors(),
             'user_id' => auth()->id(),
         ]);
 
-        // 🔁 يرجع المستخدم للصفحة مع الرسالة والبيانات القديمة
-        return redirect()->back()
-            ->with('error', 'الرجاء التأكد من تعبئة جميع الحقول المطلوبة بشكل صحيح.')
+         return redirect()->back()
+            ->with('error', ' we want all data to fill it  , its required')
             ->withErrors($e->errors())
             ->withInput();
 
     } catch (\Exception $e) {
-        // ⚙️ أي خطأ آخر (مثل خطأ في قاعدة البيانات)
-        Log::error('❌ Error while saving voice call', [
+         Log::error('❌ Err while saving voice call', [
             'message' => $e->getMessage(),
             'inputs' => $request->all(),
             'trace' => $e->getTraceAsString(),
@@ -204,7 +201,7 @@ public function store(Request $request)
 
         // 🔁 إرجاع المستخدم مع المدخلات السابقة
         return redirect()->back()
-            ->with('error', 'حدث خطأ أثناء حفظ البلاغ، الرجاء المحاولة لاحقاً.')
+            ->with('error', 'error occurred while saving .. Call Dr. Khalid..')
             ->withInput();
     }
 }

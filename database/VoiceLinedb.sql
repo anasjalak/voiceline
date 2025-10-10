@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 24, 2025 at 04:01 PM
+-- Generation Time: Oct 11, 2025 at 01:50 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `sis`
+-- Database: `voicelinedb`
 --
 
 -- --------------------------------------------------------
@@ -44,6 +44,49 @@ CREATE TABLE `cache_locks` (
   `owner` varchar(255) NOT NULL,
   `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `category`
+--
+
+CREATE TABLE `category` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `category`
+--
+
+INSERT INTO `category` (`id`, `name`, `description`, `is_active`, `created_at`) VALUES
+(1, 'Data Follow and Verification', 'Data follow-up and verification requests', 1, '2025-09-25 22:17:59'),
+(2, 'Certificates and Statements', NULL, 1, '2025-09-25 22:17:59'),
+(3, 'Finance', NULL, 1, '2025-09-25 22:17:59'),
+(14, 'E-Learning', NULL, 1, '2025-09-25 22:17:59'),
+(16, 'CESD / CTS (Staff only)', NULL, 1, '2025-09-25 22:17:59'),
+(23, 'Higher Management', NULL, 1, '2025-09-25 22:17:59'),
+(24, 'Reports', NULL, 1, '2025-09-25 22:17:59'),
+(28, 'Update Ministry Graduates List', NULL, 1, '2025-09-25 22:17:59'),
+(30, 'External Transfer & Elevation', NULL, 1, '2025-09-25 22:17:59'),
+(31, 'New Admission', NULL, 1, '2025-09-25 22:17:59'),
+(32, 'Faculty of Geoinformatics', NULL, 1, '2025-09-25 22:17:59'),
+(33, 'Fine Arts & Interior Design', NULL, 1, '2025-09-25 22:17:59'),
+(34, 'Faculty of Architecture', NULL, 1, '2025-09-25 22:17:59'),
+(35, 'Telecommunication & Space Tech', NULL, 1, '2025-09-25 22:17:59'),
+(37, 'Information Technology', NULL, 1, '2025-09-25 22:17:59'),
+(38, 'Engineering', NULL, 1, '2025-09-25 22:17:59'),
+(39, 'Computer Sciences', NULL, 1, '2025-09-25 22:17:59'),
+(40, 'Business Administration', NULL, 1, '2025-09-25 22:17:59'),
+(41, 'Postgraduate Studies', NULL, 1, '2025-09-25 22:17:59'),
+(42, 'General Inquiries', 'General inquiries and questions', 1, '2025-09-25 22:17:59'),
+(43, 'Human Resources', NULL, 1, '2025-09-25 22:17:59'),
+(44, 'BetterU Service', NULL, 1, '2025-09-25 22:17:59'),
+(45, 'Technology Horizon Journal', NULL, 1, '2025-09-25 22:17:59');
 
 -- --------------------------------------------------------
 
@@ -337,7 +380,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('aT3R3QTzi8nD82ZUCnzwF1YruGSTIFcLxQnelEzT', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoicVVVVmVlcUlNNkhHUndybnVZdU5UZ1MyV2FIZEo1MmtaUHJqSkdTSiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9zdHVkZW50Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTt9', 1758722242);
+('1SbkqcvaEdEGy1PmCXpMcqgWCg320wYTjYfyub8L', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZkxmcXhPU0lVSlpxYWluNkNhR3dmcnNreU1QUUVzcU1tMUJERUY3MSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9zdHVkZW50Ijt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTt9', 1760140083);
 
 -- --------------------------------------------------------
 
@@ -390,10 +433,10 @@ CREATE TABLE `students` (
 INSERT INTO `students` (`stud_id`, `stud_name`, `stud_surname`, `familyname`, `status_code`, `curr_sem`, `faculty_code`, `major_code`, `batch`, `stud_gpa`, `stud_cgpa`) VALUES
 (1, 'Ali', 'Hassan', 'Mohammed', 'ACT', 4, 'ENG', 'BIO', '2020', 3.60, 3.40),
 (2, 'Sara', 'Omar', 'Abdalla', 'ACT', 2, 'SCI', 'SCI', '2023', 3.20, 3.10),
-(2020, 'Mohamed', NULL, NULL, NULL, NULL, 'ENG', 'BIO', '2018', NULL, NULL),
-(2023, 'Mazin', NULL, NULL, NULL, NULL, 'IT', 'DIT', '2022', NULL, NULL),
-(22222, 'anas', NULL, NULL, NULL, NULL, 'IT', 'IT', '2917', NULL, NULL),
-(201822001, 'Aya', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(3, 'Mohamed', NULL, NULL, NULL, NULL, 'ENG', 'BIO', '2018', NULL, NULL),
+(4, 'Mazin', NULL, NULL, NULL, NULL, 'IT', 'DIT', '2022', NULL, NULL),
+(5, 'anas', NULL, NULL, NULL, NULL, 'IT', 'IT', '2917', NULL, NULL),
+(6, 'Aya', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -501,7 +544,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Administrator', 'admin@voiceline.com', NULL, '$2y$12$FkxzPku97eZnQnnS4/RSROlYN9fKT5URocquxKGZGN3NPmDkK8iEm', 'admin', 'u8zSlGii5el0aIC7A06Bta7mfkn9rxkAjwBDhEOYW0V5alTCazX0frP3lv3E', '2025-08-23 16:17:00', '2025-08-25 15:04:26'),
+(1, 'Administrator', 'admin@voiceline.com', NULL, '$2y$12$FkxzPku97eZnQnnS4/RSROlYN9fKT5URocquxKGZGN3NPmDkK8iEm', 'admin', 'WjO7Kp8DnWzBWiz0DgI69phnFAS8uz2tGwopdG27eOBbEZw4LFQkalikIGPM', '2025-08-23 16:17:00', '2025-08-25 15:04:26'),
 (2, 'supervisor', 'supervisor@voiceline.com', NULL, '$2y$12$HYiyS8K4SfpAa33/kp4T3uiNgURYye9/mhUc/DSN2YKqprnef4Wjy', 'supervisor', NULL, '2025-08-23 16:17:00', '2025-08-23 16:17:00'),
 (3, 'Support Agent /Zoom', 'agent@voiceline.com', NULL, '$2y$12$FkxzPku97eZnQnnS4/RSROlYN9fKT5URocquxKGZGN3NPmDkK8iEm', 'user', NULL, '2025-08-23 16:17:01', '2025-08-25 15:08:48');
 
@@ -536,30 +579,20 @@ CREATE TABLE `voice_calls` (
 --
 
 INSERT INTO `voice_calls` (`call_id`, `ticket_number`, `customer_type`, `stud_id`, `staff_ID`, `category`, `issue`, `Solution_Note`, `Found_Status`, `Final_Status`, `priority`, `parent_id`, `parent_name`, `parent_phone`, `handled_by_user_id`, `created_at`, `updated_at`) VALUES
-(1, '1', 'parent', NULL, NULL, 42, 'Withdrawal status', 'solved, and satisfied', 'open', '3', 'high', NULL, NULL, '20201515151', 1, '2025-09-06 09:49:43', '2025-09-06 09:49:43'),
-(2, '1', 'parent', NULL, NULL, 42, 'Withdrawal status', 'solved, and satisfied', 'open', '3', 'high', NULL, NULL, '20201515151', 1, '2025-09-06 09:50:34', '2025-09-06 09:50:34'),
-(3, '1', 'student', NULL, NULL, 1, 'transfer', 'done', 'open', '1', 'high', NULL, NULL, NULL, 1, '2025-09-06 09:55:19', '2025-09-06 09:55:19'),
-(4, '1', 'parent', NULL, NULL, 1, 'transfer', 'done', 'open', '1', 'high', NULL, NULL, '20201515151', 1, '2025-09-06 09:56:06', '2025-09-06 09:56:06'),
-(5, '1', 'parent', NULL, NULL, 1, 'aaaa', 'aaaaa', 'open', '1', 'high', NULL, 'Sara Omar Abdalla', '20201515151', 1, '2025-09-06 09:56:54', '2025-09-06 09:56:54'),
-(6, '1', 'general', NULL, NULL, 42, 'fdggfdsavsavasv', 'fsgdsfgsaf\r\nsfdgfdsgfds\r\nsfdgsdfg', 'open', '3', 'high', NULL, 'Abdalla Omer', '09995000', 1, '2025-09-06 10:00:43', '2025-09-06 10:00:43'),
-(7, '1', 'parent', NULL, NULL, 42, 'ggggg', '5665656', 'open', NULL, 'high', NULL, 'Ali Hassan Mohammed', '20201515151', 1, '2025-09-08 08:24:10', '2025-09-08 08:24:10'),
-(8, '1', 'student', NULL, NULL, 1, 'ggggg', '5665656', 'open', NULL, 'high', NULL, 'aaa', NULL, 1, '2025-09-08 08:26:42', '2025-09-08 08:26:42'),
-(9, '1', 'student', NULL, NULL, 1, 'ggggg', '5665656', 'open', NULL, 'high', NULL, 'aaa', NULL, 1, '2025-09-08 08:29:16', '2025-09-08 08:29:16'),
-(10, '1', 'student', NULL, NULL, 1, 'ggggg', '5665656', 'open', NULL, 'high', NULL, 'aaa', NULL, 1, '2025-09-08 08:31:01', '2025-09-08 08:31:01'),
-(11, '1', 'general', NULL, NULL, 1, 'ggggg', '5665656', 'open', '1', 'high', NULL, 'aaa', '20201515151', 1, '2025-09-08 08:33:25', '2025-09-08 08:33:25'),
-(12, '1', 'student', NULL, NULL, 1, 'ggggg', '5665656', 'open', NULL, 'high', NULL, 'aaa', NULL, 1, '2025-09-08 08:34:00', '2025-09-08 08:34:00'),
-(13, '1', 'student', NULL, NULL, 1, 'ggggg', '5665656', 'open', NULL, 'high', NULL, 'aaa', NULL, 1, '2025-09-08 08:35:29', '2025-09-08 08:35:29'),
-(14, '1', 'student', NULL, NULL, 1, 'ggggg', '5665656', 'open', '1', 'high', NULL, 'aaa', NULL, 1, '2025-09-08 08:40:01', '2025-09-08 08:40:01'),
-(15, '1', 'student', NULL, NULL, 1, 'ggggg', '5665656', 'open', '1', 'high', NULL, 'aaa', NULL, 1, '2025-09-08 08:42:54', '2025-09-08 08:42:54'),
-(16, '1', 'student', NULL, NULL, 1, 'lkjlk;', '.,m/.,m', 'open', '1', 'high', NULL, 'Ali Hassan Mohammed', NULL, 1, '2025-09-08 08:43:29', '2025-09-08 08:43:29'),
-(17, '1', 'student', NULL, NULL, 1, 'SZ', '5665656', 'open', '1', 'high', NULL, 'MURTADA MOHAMMED HAMAD AHMED', NULL, 1, '2025-09-11 13:43:06', '2025-09-11 13:43:06'),
-(18, 'TCK-1001', 'student', NULL, NULL, 42, 'fdfdadsf', 'TCK-1001', NULL, '2', 'TCK-1001', NULL, 'Ali Hassan Hussein Ali', NULL, 1, '2025-09-23 16:42:02', '2025-09-23 16:42:02'),
-(19, 'TCK-1001', 'student', NULL, NULL, 1, 'xx', 'xx', NULL, '1', 'Normal', NULL, 'Ali Hassan Hussein Ali', NULL, 1, '2025-09-23 20:05:12', '2025-09-23 20:05:12'),
-(20, 'TCK-1001', 'parent', NULL, NULL, 1, 'disscount', 'Solution Note', NULL, '3', 'Normal', NULL, 'Ali Hassan Hussein Ali', '20201515151', 1, '2025-09-23 20:06:29', '2025-09-23 20:06:29'),
-(21, 'Q9H-B3P-BQV4', 'student', NULL, NULL, 1, 'تخفيض', 'تمت المعالجة', NULL, '1', 'High', NULL, 'Yousif Osama Abd Elsamie Yassin', NULL, 1, '2025-09-24 10:53:25', '2025-09-24 10:53:25'),
-(22, 'HSZ-R1A-GN9R', 'student', NULL, NULL, 1, 'Issue', 'TCK-1001', NULL, '2', 'High', NULL, 'Yousif Osama Abd Elsamie Yassin', NULL, 1, '2025-09-24 10:55:18', '2025-09-24 10:55:18'),
-(23, 'N2R-NJ3-95JV', 'parent', NULL, NULL, 1, 'discount', 'done', NULL, '1', 'High', NULL, 'Yousif Osama Abd Elsamie Yassin', '0999', 1, '2025-09-24 10:56:17', '2025-09-24 10:56:17'),
-(24, 'Q9H-B3P-BQV4', 'parent', NULL, NULL, 1, 'تقسيط', 'تم', NULL, '2', 'High', NULL, 'ANAS Yousif Osama Abd Elsamie Yassin', '20201515151', 1, '2025-09-24 10:57:22', '2025-09-24 10:57:22');
+(1044, 'ABC-123-XYZ', 'student', 1, NULL, 33, '1', '1', NULL, '1', 'Critical', NULL, 'Ali Hassan Hussein Ali', NULL, 1, '2025-10-10 12:23:42', '2025-10-10 12:23:42'),
+(1045, 'ABC-123-XYZ', 'student', 1, NULL, 42, 'a', 'a', NULL, '1', 'Critical', NULL, 'Ali Hassan Hussein Ali', NULL, 1, '2025-10-10 12:38:27', '2025-10-10 12:38:27'),
+(1046, 'ABC-123-XYZ', 'student', 1, NULL, 34, '4124123412', '12421341234', NULL, '2', 'Critical', NULL, 'Ali Hassan Hussein Ali', NULL, 1, '2025-10-10 12:39:40', '2025-10-10 12:39:40'),
+(1047, 'ABC-123-XYZ', 'student', 1, NULL, 34, 'xx', NULL, NULL, '2', 'Critical', NULL, 'Ali Hassan Hussein Ali', NULL, 1, '2025-10-10 12:40:39', '2025-10-10 12:40:39'),
+(1048, NULL, 'student', 1, NULL, 42, 'ئئ', NULL, NULL, '1', 'medium', NULL, 'Ali Hassan Hussein Ali', NULL, 1, '2025-10-10 13:08:33', '2025-10-10 13:08:33'),
+(1049, NULL, 'parent', 3, NULL, 39, '99999', '9999', NULL, '1', 'medium', NULL, 'Omar Mahmoud Ibrahim Omar', '99999999', 1, '2025-10-10 13:09:10', '2025-10-10 13:09:10'),
+(1050, 'DEF-456-UVW', 'student', 2, NULL, 31, 'Artificial Intel', 'Artificial IntelArtificial IntelArtificial Intel', NULL, '2', 'High', NULL, 'Sara Mohamed Youssef Sara', NULL, 1, '2025-10-10 16:04:58', '2025-10-10 16:04:58'),
+(1051, 'DEF-456-UVW', 'student', 2, NULL, 35, 'ششششDEF-456-UVW', 'DEF-456-UVWDEF-456-UVWDEF-456-UVWDEF-456-UVW', NULL, '2', 'High', NULL, 'Sara Mohamed Youssef Sara', NULL, 1, '2025-10-10 16:06:10', '2025-10-10 16:06:10'),
+(1052, 'JKL-321-OPQ', 'student', 1, NULL, 42, 'شش', 'شششش', NULL, '1', 'Critical', NULL, 'Ali Hassan Hussein Ali', NULL, 1, '2025-10-10 16:14:48', '2025-10-10 16:14:48'),
+(1053, 'ABC-123-XYZ', 'student', 1, NULL, 35, 'بب', 'ببب', NULL, '1', 'Critical', NULL, 'Ali Hassan Hussein Ali', NULL, 1, '2025-10-10 17:00:05', '2025-10-10 17:00:05'),
+(1054, 'DEF-456-UVW', 'student', 2, NULL, 33, 'sdfsfs', 'agsfgsdgfsdf', NULL, '1', 'High', NULL, 'Sara Mohamed Youssef Sara', NULL, 1, '2025-10-10 17:04:12', '2025-10-10 17:04:12'),
+(1055, 'DEF-456-UVW', 'student', 2, NULL, 32, 'sdads', 'asdasd', NULL, '1', 'High', NULL, 'Sara Mohamed Youssef Sara', NULL, 1, '2025-10-10 18:04:59', '2025-10-10 18:04:59'),
+(1056, 'DEF-456-UVW', 'student', 2, NULL, 32, 'دفع', 'دفع', NULL, '2', 'High', NULL, 'Sara Mohamed Youssef Sara', NULL, 1, '2025-10-10 19:57:04', '2025-10-10 19:57:04'),
+(1057, 'ABC-123-XYZ', 'student', 1, NULL, 37, 'fsfasf', 'dfsdf', NULL, '1', 'Critical', NULL, 'Ali Hassan Hussein Ali', NULL, 1, '2025-10-10 20:23:17', '2025-10-10 20:23:17');
 
 --
 -- Indexes for dumped tables
@@ -576,6 +609,12 @@ ALTER TABLE `cache`
 --
 ALTER TABLE `cache_locks`
   ADD PRIMARY KEY (`key`);
+
+--
+-- Indexes for table `category`
+--
+ALTER TABLE `category`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `faculty`
@@ -774,7 +813,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `voice_calls`
 --
 ALTER TABLE `voice_calls`
-  MODIFY `call_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `call_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1058;
 
 --
 -- Constraints for dumped tables
