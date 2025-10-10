@@ -11,16 +11,16 @@ class StudentController extends Controller
   public function insert(Request $request)
   
     {
-       /* $request->validate([
-            'stud_id'=>'required'
-            'stud_name'=>'required',
-            'stud_surname'=>'required',
-            'familyname'=>'required',
-            'curr_sem'=>'required'
+         $request->validate([
+            'stud_id'=>'required',
+            'stud_name'=>'required' 
+          //  'stud_surname'=>'required',
+          //  'familyname'=>'required',
+          //  'curr_sem'=>'required'
        
-            ]); */
+            ]);  
          student::create([
-            'stud_id'=>$request->index,
+            'stud_id'=>$request->stud_id,
             'stud_name'=>$request->studentName
           //  'curr_sem'=>$request->curr_sem,
 
@@ -295,8 +295,6 @@ $clearance = DB::connection('mysql_sis2')
         $ticketIds = $tickets->pluck('trackid')->toArray();
         $ticketNames = $tickets->pluck('name')->toArray();
 
-
-
     
         // حفظ في الجلسة
        // session()->put([
@@ -313,7 +311,7 @@ $clearance = DB::connection('mysql_sis2')
         ///    'tickets_ID' => $ticketIds,
         //    'tickets_name' => $ticketNames,
        // ]);
- // dd($lastResult);
+  
         return response()->json([
             'success' => true,
             'student' => [
