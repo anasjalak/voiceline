@@ -126,7 +126,8 @@
     <div class="field" id="index-field" style="display: flex; flex-direction: row; gap: 20px;">
       <div style="flex: 1 1 25%;">
         <div class="label">Index</div>
-        <input type="text" id="indexInput" name="stud_index" style="width: 100%;">
+        <input type="text" id="indexInput" name="stud_index" style="width: 100%;" value="{{ old('stud_index') }}">
+
             <div style="flex: 1 1 25%;">
         <div class="label">Get Ticket #</div>
         <input type="text" id="ticketno" style="width: 100%;"> 
@@ -135,7 +136,8 @@
         <div style="flex: 1 1 25%;">
         <div class="label" >Student Index #:</div>
         
-        <input type="text" name="stud_id" id="stud_id">
+        <input type="text" name="stud_id" id="stud_id" value="{{ old('stud_id') }}">
+
       </div>
       </div>
       <div style="flex: 1 1 25%;">
@@ -159,15 +161,15 @@
     <div class="flex">
       <div class="field" id="name-field">
         <div class="label">Name</div>
-        <input type="text" id="name" name="caller_Name">
+        <input type="text" id="name" name="caller_Name"  value="{{ old('caller_Name') }}" class="form-control">
       </div>
       <div class="field" id="id-field">
         <div class="label">Staff ID</div>
-        <input type="text" id="id" name="staff_id">
+        <input type="text" id="id" name="staff_id"  value="{{ old('staff_id') }}" class="form-control">
       </div>
       <div class="field" id="parent-field">
         <div class="label">Phone</div>
-        <input type="text" id="phone" name="phone">
+        <input type="text" id="phone" name="phone"  value="{{ old('phone') }}" class="form-control">
       </div>
     </div>
     
@@ -175,24 +177,26 @@
     <div class="flex">
       <div class="field" id="faculty-field">
         <div class="label">Faculty</div>
-        <input type="text" id="facultyInput">
+       <input type="text" id="facultyInput" name="faculty" value="{{ old('faculty') }}">
+
       </div>
 
       <div class="field" id="batch-field">
         <div class="label">Batch</div>
-        <input type="text" id="batchInput">
+        <input type="text" id="batchInput" name="batch" value="{{ old('batch') }}">
       </div>
 
       <div class="field" id="major-field">
         <div class="label">Major</div>
-        <input type="text" id="majorInput">
+       <input type="text" id="majorInput" name="major" value="{{ old('major') }}">
+
       </div>
     </div>
    
     <!-- Rest of your form -->
     <div class="field">
       <div class="label">Issue</div>
-      <textarea id="issue" name="issue" rows="4"></textarea>
+      <textarea id="issue" name="issue" rows="4" value="{{ old('issue') }}" class="form-control"></textarea>
     </div>
     <div class="field">
       <div class="label">Category</div>
@@ -228,29 +232,29 @@
     <div class="flex">
       <div class="field">
         <div class="label">Ticket Number</div>
-        <input type="text" id="ticketNumber" name="ticket_number">
+        <input type="text" id="ticketNumber" name="ticket_number"  value="{{ old('ticket_number') }}" class="form-control">
       </div>
 
       <div class="field">
         <div class="label">Ticket URL</div>
-        <input type="text" id="ticketURL" name="ticket_url">
+        <input type="text" id="ticketURL" name="ticket_url"  value="{{ old('ticket_url') }}" class="form-control">
       </div>
 
       <div class="field">
         <div class="label">Found Status</div>
-        <input type="text" id="foundStatus" name="foundStatus">
+        <input type="text" id="foundStatus" name="foundStatus"  value="{{ old('foundStatus') }}" class="form-control">
       </div>
     </div>
     
     <div class="flex">
       <div class="field">
         <div class="label">Priority</div>
-        <input type="text" id="priority" name="priority">
+        <input type="text" id="priority" name="priority"  value="{{ old('priority') }}" class="form-control">
       </div>
 
       <div class="field">
         <div class="label">Assigned To</div>
-        <input type="text" id="assignedTo" name="assignedTo">
+        <input type="text" id="assignedTo" name="assignedTo"  value="{{ old('assignedTo') }}" class="form-control">
       </div>
     </div>
     
@@ -266,7 +270,7 @@
 
     <div class="field">
       <div class="label">Solution Note</div>
-      <textarea id="solutionNote" name="Solution_Note" rows="5"></textarea>
+      <textarea id="solutionNote" name="Solution_Note" rows="5"   value="{{ old('Solution_Note') }}" class="form-control"></textarea>
     </div>
 
     <div class="btn" style="width: 100%;">
@@ -614,7 +618,7 @@ function checkStudentIdBeforeSubmit() {
  // alert(studentId);
 
     if (!studentId || studentId.trim() === "") {
-        alert("Check Student Index");
+        alert("⚠️ re-write again !! this Voice Call in profissional way!!");
         return false; // يمنع إرسال الفورم
     }
 
