@@ -64,7 +64,7 @@
           <figure class="text-center">
             <blockquote class="blockquote">
               <h2 style="color: #6C3A30; margin-top: 40px; margin-bottom: 20px;user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;"
-                data-i18n="welcomeback">Welcome Back</h2>
+                data-i18n="welcomeback">Welcome Back >>></h2>
             </blockquote>
           </figure>
           
