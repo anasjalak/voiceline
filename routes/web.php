@@ -5,8 +5,8 @@ use  App\Http\Controllers\{
     DashboardRedirectController,TicketController,
     AdminDashboardController,
     SupervisorDashboardController,ProfileController,
-    UserDashboardController,CallController,ReportController,
-    AuthenticatedSessionController
+    UserDashboardController,CallController,ReportController, UserController,
+    AuthenticatedSessionController,
 };
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
@@ -168,3 +168,17 @@ Route::get('/log-url', function (\Illuminate\Http\Request $request) {
 // routes/web.php
 Route::get('/reports/voice-calls', [ReportController::class, 'voiceCallsReport'])->name('reports.voicecalls');
 Route::post('/reports/voice-calls/search', [ReportController::class, 'search'])->name('reports.voicecalls.search');
+
+
+ 
+
+/* Route::get('/users', [UserController::class, 'index'])->name('users.index');
+Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
+Route::post('/users', [UserController::class, 'store'])->name('users.store');
+Route::patch('/users/{user}', [UserController::class, 'update'])->name('users.update');
+Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+ */Route::get('/users', [UserController::class, 'index'])->name('users.index');
+Route::post('/users', [UserController::class, 'store'])->name('users.store');
+Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');

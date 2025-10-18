@@ -16,6 +16,9 @@
     <a class="choice" href="{{ route('student') }}">
         <span>Direct</span>
     </a>
+    <a class="choice" href="{{ route('users.index') }}">
+        <span>user Mgt.</span>
+    </a>
     
 </div>
 
